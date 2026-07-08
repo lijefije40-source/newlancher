@@ -97,3 +97,5 @@ This software uses the following open source libraries:
 | sora-editor                           | Copyright © 1991, 1999 Free Software Foundation, Inc.                                                         | LGPL-2.1 License     | [Link](https://github.com/Rosemoe/sora-editor)                                    |
 | StringFog                             | Copyright © 2016-2023, Megatron King                                                                          | Apache 2.0           | [Link](https://github.com/MegatronKing/StringFog)                                 |
 | XZ for Java                           | Copyright © The XZ for Java authors and contributors                                                          | 0BSD License         | [Link](https://tukaani.org/xz/java.html)                                          |
+#   n e w l a n c h e r  
+ 
