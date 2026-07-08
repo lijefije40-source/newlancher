@@ -1,0 +1,123 @@
+[15:59:09] [main/INFO]: Loading Minecraft 26.1.2 with Fabric Loader 0.19.3
+[15:59:09] [main/INFO]: Mappings not present!
+[15:59:10] [main/INFO]: Loading 48 mods:
+	- fabric-api 0.154.2+26.1.2
+	   |-- fabric-api-base 2.0.3+ece063234c
+	   |-- fabric-api-lookup-api-v1 2.0.12+d5a053b64c
+	   |-- fabric-biome-api-v1 18.0.5+2fa62b4e4c
+	   |-- fabric-block-api-v1 3.0.2+ec56b6014c
+	   |-- fabric-block-getter-api-v2 2.0.6+ec56b6014c
+	   |-- fabric-command-api-v2 3.0.5+e2bdee784c
+	   |-- fabric-content-registries-v0 11.2.1+76b0b6bb4c
+	   |-- fabric-convention-tags-v2 4.6.2+4f11f7994c
+	   |-- fabric-crash-report-info-v1 1.0.3+9f78a5a84c
+	   |-- fabric-creative-tab-api-v1 5.0.11+d871b99e4c
+	   |-- fabric-data-attachment-api-v1 2.2.9+44a0bd1d4c
+	   |-- fabric-data-generation-api-v1 24.3.2+574cf22d4c
+	   |-- fabric-debug-api-v1 1.0.1+c792624d4c
+	   |-- fabric-dimensions-v1 5.1.6+9cbf5da54c
+	   |-- fabric-entity-events-v1 5.0.2+e2bdee784c
+	   |-- fabric-events-interaction-v0 5.2.2+07b380be4c
+	   |-- fabric-game-rule-api-v1 4.0.5+d871b99e4c
+	   |-- fabric-item-api-v1 14.2.0+a2a3a8914c
+	   |-- fabric-key-mapping-api-v1 2.0.4+e2bdee784c
+	   |-- fabric-lifecycle-events-v1 4.1.1+df84eb3d4c
+	   |-- fabric-loot-api-v3 3.0.12+00a1fba64c
+	   |-- fabric-menu-api-v1 2.0.14+d871b99e4c
+	   |-- fabric-message-api-v1 7.0.5+dae8ce3e4c
+	   |-- fabric-model-loading-api-v1 8.0.11+c80601bb4c
+	   |-- fabric-networking-api-v1 6.3.1+554860db4c
+	   |-- fabric-object-builder-api-v1 23.1.0+abb459f14c
+	   |-- fabric-particles-v1 5.0.15+b61fef434c
+	   |-- fabric-permission-api-v1 1.0.2+7437387b4c
+	   |-- fabric-recipe-api-v1 9.0.16+be4b75ae4c
+	   |-- fabric-registry-sync-v0 7.1.0+2fa62b4e4c
+	   |-- fabric-renderer-api-v1 13.0.8+c80601bb4c
+	   |-- fabric-renderer-indigo 8.1.5+1403e82c4c
+	   |-- fabric-rendering-fluids-v1 6.0.1+d871b99e4c
+	   |-- fabric-rendering-v1 23.3.1+e9207d814c
+	   |-- fabric-resource-conditions-api-v1 6.1.0+83dd0ba34c
+	   |-- fabric-resource-loader-v0 3.3.17+4fc5413f4c
+	   |-- fabric-resource-loader-v1 2.0.10+7c44c7324c
+	   |-- fabric-screen-api-v1 5.1.0+981dd9b24c
+	   |-- fabric-serialization-api-v1 2.0.3+11a26f314c
+	   |-- fabric-sound-api-v1 2.0.4+11a26f314c
+	   |-- fabric-tag-api-v1 2.1.1+371cf5db4c
+	   |-- fabric-transfer-api-v1 8.0.6+357ea7334c
+	   \-- fabric-transitive-access-wideners-v1 8.1.3+3ff549fb4c
+	- fabricloader 0.19.3
+	   \-- mixinextras 0.5.4
+	- java 25
+	- minecraft 26.1.2
+[15:59:10] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/net/fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/sponge-mixin-0.17.3+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+[15:59:10] [main/INFO]: Compatibility level set to JAVA_25
+[15:59:14] [main/INFO]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.4).
+[15:59:17] [main/WARN]: Did not find udev library in operating system. Some features may not work.
+[15:59:17] [main/WARN]: File not found or not readable: /proc/stat
+[15:59:18] [Datafixer Bootstrap/INFO]: 291 Datafixer optimizations took 1460 milliseconds
+[15:59:34] [Render thread/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[15:59:34] [Render thread/INFO]: Setting user: okito
+[15:59:34] [Render thread/INFO]: [STDOUT]: [MioLibPatcher/INFO]: Patch target class: io/netty/util/internal/PlatformDependent
+[15:59:34] [Render thread/INFO]: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system instability.
+[15:59:36] [Render thread/INFO]: [Indigo] Registering Indigo renderer!
+[15:59:37] [Download-2/ERROR]: Failed to fetch user properties
+com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
+	at knot//com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59)
+	at knot//com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:150)
+	at knot//net.minecraft.client.Minecraft.lambda$new$1(Minecraft.java:459)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:103)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:56)
+	at knot//com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:121)
+	... 5 more
+[15:59:37] [Render thread/INFO]: Backend library: LWJGL version 3.3.6-snapshot
+[15:59:37] [Render thread/INFO]: [STDOUT]: [MioLibPatcher/INFO]: Patch target class: org/lwjgl/system/Library
+[15:59:38] [Render thread/INFO]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access, GL_EXT_texture_filter_anisotropic
+[15:59:40] [Render thread/INFO]: [STDOUT]: [MioLibPatcher/INFO]: Patch target class: com/mojang/text2speech/Narrator
+[15:59:41] [Render thread/INFO]: Reloading ResourceManager: vanilla, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-getter-api-v2, fabric-command-api-v2, fabric-content-registries-v0, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-creative-tab-api-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-debug-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-item-api-v1, fabric-key-mapping-api-v1, fabric-lifecycle-events-v1, fabric-loot-api-v3, fabric-menu-api-v1, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-permission-api-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-resource-loader-v1, fabric-screen-api-v1, fabric-serialization-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, fabricloader
+[15:59:41] [Download-2/INFO]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[15:59:41] [Download-2/ERROR]: Failed to fetch Realms feature flags
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: 0'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:526)
+	at knot//com.mojang.realmsclient.client.RealmsClient.fetchFeatureFlags(RealmsClient.java:186)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[15:59:42] [Worker-Main-2/INFO]: Found unifont_all_no_pua-17.0.01.hex, loading
+[15:59:42] [Worker-Main-5/INFO]: Found unifont_pua-17.0.01.hex, loading
+[15:59:43] [Worker-Main-2/INFO]: Found unifont_jp_patch-17.0.01.hex, loading
+[15:59:48] [Render thread/INFO]: OpenAL initialized on device Oboe Default
+[15:59:48] [Render thread/INFO]: Sound engine started
+[15:59:48] [Render thread/INFO]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[15:59:48] [Render thread/INFO]: Created: 128x128x0 minecraft:textures/atlas/decorated_pot.png-atlas
+[15:59:48] [Render thread/INFO]: Created: 2048x1024x0 minecraft:textures/atlas/armor_trims.png-atlas
+[15:59:48] [Render thread/INFO]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[15:59:48] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
+[15:59:48] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/blocks.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 512x512x0 minecraft:textures/atlas/chest.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 256x128x0 minecraft:textures/atlas/celestials.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 512x512x0 minecraft:textures/atlas/beds.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 128x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 512x256x0 minecraft:textures/atlas/signs.png-atlas
+[15:59:49] [Render thread/INFO]: Created: 512x512x0 minecraft:textures/atlas/shulker_boxes.png-atlas
+[15:59:51] [IO-Worker-1/INFO]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[15:59:51] [IO-Worker-1/ERROR]: Couldn't connect to realms
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: 0'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:526)
+	at knot//com.mojang.realmsclient.client.RealmsClient.clientCompatible(RealmsClient.java:307)
+	at knot//com.mojang.realmsclient.RealmsAvailability.lambda$check$0(RealmsAvailability.java:48)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[16:00:06] [Render thread/INFO]: Loaded 1515 recipes
+[16:00:06] [Render thread/INFO]: Loaded 1617 advancements
+[16:00:32] [Render thread/INFO]: Stopping!

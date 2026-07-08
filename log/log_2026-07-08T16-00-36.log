@@ -1,0 +1,105 @@
+================ ZalithLauncher Log ================
+▷ Device: T767H T767H
+▷ Arch: arm64
+▷ Android Version: 11
+▷ Launcher Version: 2.4.9_hotfix1-debug, build: all
+====================================================
+[16:00:36.549] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-8/bin-arm64.tar.xz, contains = true
+[16:00:36.557] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-17/bin-arm64.tar.xz, contains = true
+[16:00:36.561] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-21/bin-arm64.tar.xz, contains = true
+[16:00:36.565] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-25/bin-arm64.tar.xz, contains = true
+[16:00:36.581] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/jna-arm64.zip
+[16:00:36.582] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/version
+[16:00:36.582] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm64.tar.xz
+[16:00:36.583] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86.tar.xz
+[16:00:36.582] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm.tar.xz
+[16:00:36.583] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86_64.tar.xz
+[16:00:36.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/universal.tar.xz
+[16:00:36.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/version
+[16:00:36.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm.tar.xz
+[16:00:36.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm64.tar.xz
+[16:00:36.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86.tar.xz
+[16:00:36.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86_64.tar.xz
+[16:00:36.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/universal.tar.xz
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/version
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm.tar.xz
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm64.tar.xz
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-x86_64.tar.xz
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/universal.tar.xz
+[16:00:36.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/version
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm.tar.xz
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm64.tar.xz
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86.tar.xz
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86_64.tar.xz
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/universal.tar.xz
+[16:00:36.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/version
+[16:00:36.591] [UnpackSingleTask/INFO] auth_libs: Pack is up-to-date with the launcher, continuing...
+[16:00:36.595] [UnpackSingleTask/INFO] caciocavallo: Pack is up-to-date with the launcher, continuing...
+[16:00:36.598] [UnpackSingleTask/INFO] caciocavallo17: Pack is up-to-date with the launcher, continuing...
+[16:00:36.611] [UnpackSingleTask/INFO] jna: Pack is up-to-date with the launcher, continuing...
+[16:00:36.614] [UnpackSingleTask/INFO] launcher: Pack is up-to-date with the launcher, continuing...
+[16:00:36.617] [UnpackSingleTask/INFO] lwjgl3: Pack is up-to-date with the launcher, continuing...
+[16:00:36.618] [SplashActivity/INFO] All content that needs to be extracted is already the latest version!
+[16:00:36.679] [Renderers/INFO] Renderer loaded: Krypton Wrapper (opengles3 - e7b90ed6-e518-4d4e-93dc-5c7133cd5b31)
+[16:00:36.680] [Renderers/INFO] Renderer loaded: GL4ES (opengles2 - 8b52d82d-8f6d-4d3a-a767-dc93f8b72fc7)
+[16:00:36.680] [Renderers/INFO] Renderer loaded: Vulkan Zink (vulkan_zink - 0fa435e2-46df-45c9-906c-b29606aaef00)
+[16:00:36.680] [Renderers/INFO] Renderer loaded: VirGLRenderer (gallium_virgl - a3ccc1fe-de3f-4a81-8c45-2485181b63b3)
+[16:00:36.681] [Renderers/INFO] Renderer loaded: Freedreno (Adreno) (gallium_freedreno - 1ad7249f-5784-4f00-bc72-174b3578ee46)
+[16:00:36.681] [Renderers/INFO] Renderer loaded: Panfrost (Mali) (gallium_panfrost - 9b2808c4-11af-4c72-a9c6-94c940396475)
+[16:00:36.800] [LauncherUpgradeVM/INFO] App start check: Within rate limit, skipping
+[16:00:36.831] [AccountManager/INFO] Loaded 0 auth servers
+[16:00:36.833] [AccountManager/INFO] Loaded 1 accounts
+[16:00:36.835] [VersionsManager/DEBUG] Initiated by GamePathManager.reloadPath: starting to refresh the version list.
+[16:00:36.834] [GamePathManager/INFO] Loaded 1 game paths
+[16:00:36.883] [VersionsManager/INFO] Identified and added version: 1.8.9 Legacy Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/1.8.9 Legacy Fabric 0.19.3), Info: 1.8.9, Legacy Fabric - 0.19.3
+[16:00:36.948] [VersionsManager/INFO] Identified and added version: 26.1.2 Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/26.1.2 Fabric 0.19.3), Info: 26.1.2, Fabric - 0.19.3
+[16:00:37.063] [VersionsManager/DEBUG] Version list refreshed, refreshing the current version now.
+[16:00:37.064] [VersionsManager/DEBUG] The current version is: 26.1.2 Fabric 0.19.3
+[16:00:48.021] [CurrentGameInfo/DEBUG] Current version 1.8.9 Legacy Fabric 0.19.3 has been saved to the config file.
+[16:00:48.021] [VersionsManager/DEBUG] Current game info file saved, refreshing the current version now.
+[16:00:48.022] [VersionsManager/DEBUG] The current version is: 1.8.9 Legacy Fabric 0.19.3
+[16:00:49.776] [Minecraft.DownloadUtils/DEBUG] Library net.java.dev.jna:jna:3.4.0 has been changed to version 5.13.0
+[16:00:50.161] [FileUtils/INFO] An exception occurred while reading, returning the default value.
+java.io.FileNotFoundException: /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/assets/objects/e9/e9833a1512b57bcf88ac4fdcc8df4e5a7e9d701d: open failed: EACCES (Permission denied)
+	at libcore.io.IoBridge.open(IoBridge.java:492)
+	at java.io.FileInputStream.<init>(FileInputStream.java:160)
+	at com.movtery.zalithlauncher.utils.file.FileUtilsKt.compareSHA1(FileUtils.kt:60)
+	at com.movtery.zalithlauncher.utils.file.FileUtilsKt.compareSHA1$default(FileUtils.kt:56)
+	at com.movtery.zalithlauncher.game.version.download.DownloadTask.verifySha1(DownloadTask.kt:110)
+	at com.movtery.zalithlauncher.game.version.download.DownloadTask.download(DownloadTask.kt:57)
+	at com.movtery.zalithlauncher.game.version.download.MinecraftDownloader$downloadAll$2$1$downloadJobs$1$1.invokeSuspend(MinecraftDownloader.kt:158)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:124)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:798)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+Caused by: android.system.ErrnoException: open failed: EACCES (Permission denied)
+	at libcore.io.Linux.open(Native Method)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:166)
+	at libcore.io.BlockGuardOs.open(BlockGuardOs.java:254)
+	at libcore.io.ForwardingOs.open(ForwardingOs.java:166)
+	at android.app.ActivityThread$AndroidOs.open(ActivityThread.java:7718)
+	at libcore.io.IoBridge.open(IoBridge.java:478)
+	... 14 more
+[16:00:51.809] [MinecraftDownloader/ERROR] Failed to download Minecraft!
+java.lang.IllegalArgumentException: File system element for parameter 'path' does not exist: '/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/assets/objects/e9/e9833a1512b57bcf88ac4fdcc8df4e5a7e9d701d'
+	at org.apache.commons.io.file.PathUtils.requireExists(PathUtils.java:1589)
+	at org.apache.commons.io.file.PathUtils.sizeOf(PathUtils.java:1768)
+	at org.apache.commons.io.FileUtils.lambda$sizeOf$15(FileUtils.java:2961)
+	at org.apache.commons.io.FileUtils$$ExternalSyntheticLambda1.getAsLong(D8$$SyntheticClass:0)
+	at org.apache.commons.io.function.Uncheck.getAsLong(Uncheck.java:295)
+	at org.apache.commons.io.FileUtils.sizeOf(FileUtils.java:2961)
+	at com.movtery.zalithlauncher.game.version.download.DownloadTask.download(DownloadTask.kt:58)
+	at com.movtery.zalithlauncher.game.version.download.MinecraftDownloader$downloadAll$2$1$downloadJobs$1$1.invokeSuspend(MinecraftDownloader.kt:158)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:124)
+	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:586)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:798)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:717)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:704)
+[16:00:58.610] [Minecraft.DownloadUtils/DEBUG] Library net.java.dev.jna:jna:3.4.0 has been changed to version 5.13.0

@@ -1,0 +1,28 @@
+[16:01:07] [main/INFO]: Loading Minecraft 1.8.9 with Fabric Loader 0.19.3
+[16:01:07] [main/WARN]: Mod resolution failed
+[16:01:07] [main/INFO]: Immediate reason: [HARD_DEP_NO_CANDIDATE legacy-fabric-api 1.19.0 {depends osl @ [>=0.20.0]}, ROOT_FORCELOAD_SINGLE legacy-fabric-api 1.19.0]
+[16:01:07] [main/INFO]: Reason: [HARD_DEP legacy-fabric-api 1.19.0 {depends osl @ [>=0.20.0]}, HARD_DEP legacy-fabric-biome-api-v1 1.1.0+1.12.2 {depends minecraft @ [>=1.9 <=1.12.2]}, HARD_DEP legacy-fabric-block-entity-api-v1 1.1.0+1.12.2 {depends minecraft @ [>=1.11 <=1.12.2]}, HARD_DEP legacy-fabric-command-api-v2 1.2.2+1.7.10 {depends minecraft @ [>=1.7 <=1.7.10]}, HARD_DEP legacy-fabric-entity-api-v1 1.1.2+1.8 {depends minecraft @ [>=1.8 <=1.8.1]}, HARD_DEP legacy-fabric-entity-events-v1 1.1.0+1.12.2 {depends minecraft @ [>1.11.2 <=1.12.2]}, HARD_DEP legacy-fabric-item-groups-v1 2.3.0+1.12.2 {depends minecraft @ [>1.10.2 <=1.12.2]}, HARD_DEP legacy-fabric-networking-api-v1 2.2.3+1.12.2 {depends minecraft @ [>1.8.9 <=1.12.2]}, HARD_DEP legacy-fabric-permissions-api-v1 1.2.2+1.6.4 {depends minecraft @ [>=1.3 <=1.6.4]}, HARD_DEP legacy-fabric-registry-sync-api-v2 1.2.0+1.8 {depends minecraft @ [>=1.8 <=1.8.1]}, HARD_DEP legacy-fabric-registry-sync-api-v2-common-classtweaker 1.2.0+1.7.10 {depends minecraft @ [>=1.7 <=1.8.1]}, HARD_DEP legacy-fabric-rendering-api-v1 1.1.1+1.7.10 {depends minecraft @ [>=1.6 <=1.7.10]}, HARD_DEP legacy-fabric-resource-loader-v1 2.7.1+1.7.10 {depends minecraft @ [>=1.7 <=1.7.10]}]
+[16:01:07] [main/INFO]: Fix: add [add:osl 0.20.0 ([[0.20.0,∞)])], remove [], replace []
+[16:01:07] [main/ERROR]: Incompatible mods found!
+net.fabricmc.loader.impl.FormattedException: Some of your mods are incompatible with the game or each other!
+A potential solution has been determined, this may resolve your problem:
+	 - Install osl, version 0.20.0 or later.
+More details:
+	 - Mod 'Legacy Fabric API' (legacy-fabric-api) 1.19.0 requires version 0.20.0 or later of osl, which is missing!
+	 - Mod 'Legacy Fabric Biome API (V1)' (legacy-fabric-biome-api-v1) 1.1.0+1.12.2 requires any version between 1.9 (inclusive) and 1.12.2 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Block Entity API (V1)' (legacy-fabric-block-entity-api-v1) 1.1.0+1.12.2 requires any version between 1.11 (inclusive) and 1.12.2 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Command API (v2)' (legacy-fabric-command-api-v2) 1.2.2+1.7.10 requires any version between 1.7 (inclusive) and 1.7.10 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Entity API (V1)' (legacy-fabric-entity-api-v1) 1.1.2+1.8 requires any version between 1.8 (inclusive) and 1.8.1 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Entity Events (V1)' (legacy-fabric-entity-events-v1) 1.1.0+1.12.2 requires any version between 1.11.2 (exclusive) and 1.12.2 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Item Groups (V1)' (legacy-fabric-item-groups-v1) 2.3.0+1.12.2 requires any version between 1.10.2 (exclusive) and 1.12.2 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Networking API (v1)' (legacy-fabric-networking-api-v1) 2.2.3+1.12.2 requires any version between 1.8.9 (exclusive) and 1.12.2 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Permissions API (v2)' (legacy-fabric-permissions-api-v1) 1.2.2+1.6.4 requires any version between 1.3 (inclusive) and 1.6.4 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Registry Sync API (V2)' (legacy-fabric-registry-sync-api-v2) 1.2.0+1.8 requires any version between 1.8 (inclusive) and 1.8.1 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Registry Sync API (V2) Common ClassTweaker' (legacy-fabric-registry-sync-api-v2-common-classtweaker) 1.2.0+1.7.10 requires any version between 1.7 (inclusive) and 1.8.1 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Rendering API (V1)' (legacy-fabric-rendering-api-v1) 1.1.1+1.7.10 requires any version between 1.6 (inclusive) and 1.7.10 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	 - Mod 'Legacy Fabric Resource Loader (V1)' (legacy-fabric-resource-loader-v1) 2.7.1+1.7.10 requires any version between 1.7 (inclusive) and 1.7.10 (inclusive) of 'Minecraft' (minecraft), but only the wrong version is present: 1.8.9!
+	at net.fabricmc.loader.impl.FormattedException.ofLocalized(FormattedException.java:51) ~[fabric-loader-0.19.3.jar:?]
+	at net.fabricmc.loader.impl.FabricLoaderImpl.load(FabricLoaderImpl.java:202) ~[fabric-loader-0.19.3.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.init(Knot.java:142) ~[fabric-loader-0.19.3.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:66) [fabric-loader-0.19.3.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) [fabric-loader-0.19.3.jar:?]

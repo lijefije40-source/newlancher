@@ -1,0 +1,41 @@
+================ ZalithLauncher Log ================
+▷ Device: T767H T767H
+▷ Arch: arm64
+▷ Android Version: 11
+▷ Launcher Version: 2.4.9_hotfix1-debug, build: all
+====================================================
+[16:01:01.403] [Renderers/INFO] Renderer loaded: Krypton Wrapper (opengles3 - e7b90ed6-e518-4d4e-93dc-5c7133cd5b31)
+[16:01:01.404] [Renderers/INFO] Renderer loaded: GL4ES (opengles2 - 8b52d82d-8f6d-4d3a-a767-dc93f8b72fc7)
+[16:01:01.405] [Renderers/INFO] Renderer loaded: Vulkan Zink (vulkan_zink - 0fa435e2-46df-45c9-906c-b29606aaef00)
+[16:01:01.405] [Renderers/INFO] Renderer loaded: Freedreno (Adreno) (gallium_freedreno - 1ad7249f-5784-4f00-bc72-174b3578ee46)
+[16:01:01.405] [Renderers/INFO] Renderer loaded: VirGLRenderer (gallium_virgl - a3ccc1fe-de3f-4a81-8c45-2485181b63b3)
+[16:01:01.405] [Renderers/INFO] Renderer loaded: Panfrost (Mali) (gallium_panfrost - 9b2808c4-11af-4c72-a9c6-94c940396475)
+[16:01:01.474] [PhysicalMouseChecker/INFO] Initialization complete, physical mouse connection status: false
+[16:01:01.491] [VMActivity/INFO] Creating game launch session...
+[16:01:01.492] [VMActivity/INFO] Launch config received - Version: 1.8.9 Legacy Fabric 0.19.3, Account: okito
+[16:01:01.492] [VMActivity/INFO] Creating GameLauncher instance...
+[16:01:01.492] [GameLauncher/ERROR] GameLauncher init started
+[16:01:01.497] [AccountManager/INFO] Loaded 0 auth servers
+[16:01:01.498] [GameLauncher/ERROR] Version: 1.8.9 Legacy Fabric 0.19.3, Account: okito
+[16:01:01.498] [GameLauncher/ERROR] Step 1: Setting version...
+[16:01:01.499] [GameLauncher/ERROR] Step 1 completed
+[16:01:01.499] [GameLauncher/ERROR] Using online account: Local
+[16:01:01.499] [GameLauncher/ERROR] Step 2: Setting account...
+[16:01:01.499] [GameLauncher/ERROR] Step 2 completed
+[16:01:01.500] [GameLauncher/ERROR] GameLauncher init completed
+[16:01:01.500] [VMActivity/INFO] GameLauncher created successfully
+[16:01:01.502] [GamePathManager/INFO] Loaded 1 game paths
+[16:01:01.502] [AccountManager/INFO] Loaded 1 accounts
+[16:01:01.503] [VersionsManager/DEBUG] Initiated by GamePathManager.reloadPath: starting to refresh the version list.
+[16:01:01.530] [VersionsManager/INFO] Identified and added version: 1.8.9 Legacy Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/1.8.9 Legacy Fabric 0.19.3), Info: 1.8.9, Legacy Fabric - 0.19.3
+[16:01:01.564] [VersionsManager/INFO] Identified and added version: 26.1.2 Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/26.1.2 Fabric 0.19.3), Info: 26.1.2, Fabric - 0.19.3
+[16:01:01.666] [VersionsManager/DEBUG] Version list refreshed, refreshing the current version now.
+[16:01:01.667] [VersionsManager/DEBUG] The current version is: 1.8.9 Legacy Fabric 0.19.3
+[16:01:02.380] [Minecraft.DownloadUtils/DEBUG] Library net.java.dev.jna:jna:3.4.0 has been changed to version 5.13.0
+[16:01:02.445] [GameLauncher/ERROR] Lazy initialization of OfflineYggdrasilServer started
+[16:01:02.447] [GameLauncher/ERROR] createOfflineServer() called
+[16:01:02.452] [GameLauncher/ERROR] Attempting to create OfflineYggdrasilServer instance
+[16:01:02.454] [GameLauncher/ERROR] OfflineYggdrasilServer created successfully in 2ms
+[16:01:02.464] [GameLauncher/ERROR] Lazy initialization of OfflineYggdrasilServer completed
+[16:01:02.503] [Minecraft.DownloadUtils/DEBUG] Library net.java.dev.jna:jna:3.4.0 has been changed to version 5.13.0
+[16:01:02.541] [GameLauncher/INFO] GLES version detected: 3

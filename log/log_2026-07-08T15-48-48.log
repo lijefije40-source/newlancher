@@ -1,0 +1,86 @@
+================ ZalithLauncher Log ================
+▷ Device: T767H T767H
+▷ Arch: arm64
+▷ Android Version: 11
+▷ Launcher Version: 2.4.9_hotfix1-debug, build: all
+====================================================
+[15:48:48.563] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-8/bin-arm64.tar.xz, contains = true
+[15:48:48.568] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-17/bin-arm64.tar.xz, contains = true
+[15:48:48.572] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-21/bin-arm64.tar.xz, contains = true
+[15:48:48.574] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-25/bin-arm64.tar.xz, contains = true
+[15:48:48.583] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/jna-arm64.zip
+[15:48:48.583] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/version
+[15:48:48.583] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm.tar.xz
+[15:48:48.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm64.tar.xz
+[15:48:48.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86.tar.xz
+[15:48:48.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86_64.tar.xz
+[15:48:48.584] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/universal.tar.xz
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/version
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm.tar.xz
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm64.tar.xz
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86.tar.xz
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86_64.tar.xz
+[15:48:48.585] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/universal.tar.xz
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/version
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm.tar.xz
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm64.tar.xz
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-x86_64.tar.xz
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/universal.tar.xz
+[15:48:48.586] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/version
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm.tar.xz
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm64.tar.xz
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86.tar.xz
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86_64.tar.xz
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/universal.tar.xz
+[15:48:48.587] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/version
+[15:48:48.590] [UnpackSingleTask/INFO] auth_libs: Pack is up-to-date with the launcher, continuing...
+[15:48:48.591] [UnpackSingleTask/INFO] caciocavallo: Pack is up-to-date with the launcher, continuing...
+[15:48:48.593] [UnpackSingleTask/INFO] caciocavallo17: Pack is up-to-date with the launcher, continuing...
+[15:48:48.601] [UnpackSingleTask/INFO] jna: Pack is up-to-date with the launcher, continuing...
+[15:48:48.604] [UnpackSingleTask/INFO] launcher: Pack is up-to-date with the launcher, continuing...
+[15:48:48.605] [UnpackSingleTask/INFO] lwjgl3: Pack is up-to-date with the launcher, continuing...
+[15:48:48.605] [SplashActivity/INFO] All content that needs to be extracted is already the latest version!
+[15:48:48.649] [Renderers/INFO] Renderer loaded: Krypton Wrapper (opengles3 - e7b90ed6-e518-4d4e-93dc-5c7133cd5b31)
+[15:48:48.649] [Renderers/INFO] Renderer loaded: GL4ES (opengles2 - 8b52d82d-8f6d-4d3a-a767-dc93f8b72fc7)
+[15:48:48.649] [Renderers/INFO] Renderer loaded: Vulkan Zink (vulkan_zink - 0fa435e2-46df-45c9-906c-b29606aaef00)
+[15:48:48.649] [Renderers/INFO] Renderer loaded: VirGLRenderer (gallium_virgl - a3ccc1fe-de3f-4a81-8c45-2485181b63b3)
+[15:48:48.649] [Renderers/INFO] Renderer loaded: Panfrost (Mali) (gallium_panfrost - 9b2808c4-11af-4c72-a9c6-94c940396475)
+[15:48:48.649] [Renderers/INFO] Renderer loaded: Freedreno (Adreno) (gallium_freedreno - 1ad7249f-5784-4f00-bc72-174b3578ee46)
+[15:48:48.710] [LauncherUpgradeVM/INFO] App start check: Within rate limit, skipping
+[15:48:48.727] [AccountManager/INFO] Loaded 0 auth servers
+[15:48:48.728] [GamePathManager/INFO] Loaded 1 game paths
+[15:48:48.728] [VersionsManager/DEBUG] Initiated by GamePathManager.reloadPath: starting to refresh the version list.
+[15:48:48.730] [AccountManager/INFO] Loaded 1 accounts
+[15:48:48.763] [VersionsManager/INFO] Identified and added version: 1.8.9 Legacy Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/1.8.9 Legacy Fabric 0.19.3), Info: 1.8.9, Legacy Fabric - 0.19.3
+[15:48:48.771] [VersionsManager/DEBUG] Version list refreshed, refreshing the current version now.
+[15:48:48.772] [VersionsManager/DEBUG] The current version is: 1.8.9 Legacy Fabric 0.19.3
+[15:49:03.689] [PlatformSearch/DEBUG] Starting to attempt to perform the operation on source: {Official Modrinth}
+[15:49:03.690] [PlatformSearch/DEBUG] Starting to attempt to perform the operation on source: {Official Modrinth}
+[15:49:15.393] [GameInstaller/INFO] Temporary game directory cleared.
+[15:49:15.396] [GameInstaller/DEBUG] Created directory: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/versions/26.1.2
+[15:49:15.396] [GameInstaller/DEBUG] Created directory: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/versions/fabric-loader-0.19.3-26.1.2
+[15:49:15.397] [GameInstaller/DEBUG] Created directory: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.temp_mods
+[15:58:40.655] [GameJsonMerger/INFO] Start merge version json, output: /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/26.1.2 Fabric 0.19.3, Minecraft: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/versions/26.1.2
+，Fabric: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/versions/fabric-loader-0.19.3-26.1.2
+[15:58:40.932] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/org/ow2/asm/asm-util/9.10.1/asm-util-9.10.1.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/org/ow2/asm/asm-util/9.10.1/asm-util-9.10.1.jar
+[15:58:40.934] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/org/ow2/asm/asm-tree/9.10.1/asm-tree-9.10.1.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/org/ow2/asm/asm-tree/9.10.1/asm-tree-9.10.1.jar
+[15:58:40.936] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/org/ow2/asm/asm-commons/9.10.1/asm-commons-9.10.1.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/org/ow2/asm/asm-commons/9.10.1/asm-commons-9.10.1.jar
+[15:58:40.938] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/org/ow2/asm/asm-analysis/9.10.1/asm-analysis-9.10.1.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/org/ow2/asm/asm-analysis/9.10.1/asm-analysis-9.10.1.jar
+[15:58:40.940] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/org/ow2/asm/asm/9.10.1/asm-9.10.1.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/org/ow2/asm/asm/9.10.1/asm-9.10.1.jar
+[15:58:40.951] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/net/fabricmc/fabric-loader/0.19.3/fabric-loader-0.19.3.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/net/fabricmc/fabric-loader/0.19.3/fabric-loader-0.19.3.jar
+[15:58:40.961] [FileUtils/INFO] copied: /data/user/0/com.movtery.zalithlauncher.v2.debug/cache/temp_game/.minecraft/libraries/net/fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/sponge-mixin-0.17.3+mixin.0.8.7.jar -> /storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/libraries/net/fabricmc/sponge-mixin/0.17.3+mixin.0.8.7/sponge-mixin-0.17.3+mixin.0.8.7.jar
+[15:58:40.997] [VersionConfig/INFO] Saved version configuration: com.movtery.zalithlauncher.game.version.installed.VersionConfig@4482ffd
+[15:58:41.318] [GameInstaller/INFO] Temporary game directory cleared.
+[15:58:41.319] [VersionsManager/DEBUG] Initiated by [DownloadGame] GameInstaller.onInstalled: starting to refresh the version list.
+[15:58:41.336] [CurrentGameInfo/DEBUG] Current version 26.1.2 Fabric 0.19.3 has been saved to the config file.
+[15:58:41.336] [VersionsManager/DEBUG] Has attempted to save the current version: 26.1.2 Fabric 0.19.3
+[15:58:41.392] [VersionsManager/INFO] Identified and added version: 1.8.9 Legacy Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/1.8.9 Legacy Fabric 0.19.3), Info: 1.8.9, Legacy Fabric - 0.19.3
+[15:58:41.405] [VersionsManager/INFO] Identified and added version: 26.1.2 Fabric 0.19.3, Path: (/storage/emulated/0/Android/data/com.movtery.zalithlauncher.v2.debug/files/.minecraft/versions/26.1.2 Fabric 0.19.3), Info: 26.1.2, Fabric - 0.19.3
+[15:58:41.407] [VersionsManager/DEBUG] Version list refreshed, refreshing the current version now.
+[15:58:41.408] [VersionsManager/DEBUG] The current version is: 26.1.2 Fabric 0.19.3
+[15:58:46.025] [CurrentGameInfo/DEBUG] Current version 1.8.9 Legacy Fabric 0.19.3 has been saved to the config file.
+[15:58:46.025] [VersionsManager/DEBUG] Current game info file saved, refreshing the current version now.
+[15:58:46.026] [VersionsManager/DEBUG] The current version is: 1.8.9 Legacy Fabric 0.19.3
+[15:58:46.828] [CurrentGameInfo/DEBUG] Current version 26.1.2 Fabric 0.19.3 has been saved to the config file.
+[15:58:46.828] [VersionsManager/DEBUG] Current game info file saved, refreshing the current version now.
+[15:58:46.829] [VersionsManager/DEBUG] The current version is: 26.1.2 Fabric 0.19.3
