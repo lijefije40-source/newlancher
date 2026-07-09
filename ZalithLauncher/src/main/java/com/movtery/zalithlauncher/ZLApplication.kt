@@ -90,11 +90,10 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
             initializeData()
             PathManager.DIR_FILES_PRIVATE = getDir("files", MODE_PRIVATE)
             DEVICE_ARCHITECTURE = Architecture.getDeviceArchitecture()
-            //Force native lib directory for x86 devices (Asus Zenfones, x86 emulators)
-            if (Architecture.isx86Device()) {
+            //Force x86 lib directory for Asus x86 based zenfones
+            if (Architecture.isx86Device() && Architecture.is32BitsDevice) {
                 val originalJNIDirectory = applicationInfo.nativeLibraryDir
-                val abiDir = if (Architecture.is32BitsDevice) "x86" else "x86_64"
-                applicationInfo.nativeLibraryDir = originalJNIDirectory.take(originalJNIDirectory.lastIndexOf("/")) + "/$abiDir"
+                applicationInfo.nativeLibraryDir = originalJNIDirectory.take(originalJNIDirectory.lastIndexOf("/")) + "/x86"
             }
         }.onFailure { launchTh ->
             writeCrashFile(

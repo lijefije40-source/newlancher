@@ -25,9 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import com.movtery.zalithlauncher.game.launch.Launcher
-import com.movtery.zalithlauncher.game.renderer.Renderers
 import com.movtery.zalithlauncher.ui.control.input.TextInputMode
-import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.viewmodel.ErrorViewModel
 import com.movtery.zalithlauncher.viewmodel.EventViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -53,65 +51,8 @@ abstract class AbstractHandler(
         scope: CoroutineScope
     ) {
         scope.launch(Dispatchers.Default) {
-            val code = try {
-                launcher.launch(screenSize)
-            } catch (e: Exception) {
-                Logger.error("AbstractHandler", "Unhandled exception during game launch", e)
-                errorViewModel.showError(ErrorViewModel.ThrowableMessage(
-                    title = "Launch Error",
-                    message = "An unexpected error occurred while launching the game:\n${e.message}\n\nPlease check the game log for more details."
-                ))
-                -994
-            }
-            
-            // Handle error codes and show appropriate error messages
-            if (code != 0) {
-                val errorMessage = getErrorMessageForCode(code)
-                errorViewModel.showError(ErrorViewModel.ThrowableMessage(
-                    title = "Game Launch Error",
-                    message = errorMessage
-                ))
-            }
-            
+            val code = launcher.launch(screenSize)
             onExit(code)
-        }
-    }
-    
-    private fun getErrorMessageForCode(code: Int): String {
-        val rendererInfo = getRendererDebugInfo()
-        val baseMsg = when (code) {
-            -999 -> "Fatal Error: JVM arguments array was null.\nPlease check your game configuration."
-            -998 -> "Fatal Error: JVM arguments array was empty.\nPlease check your game configuration."
-            -997 -> "Fatal Error: Failed to convert JVM arguments.\nTry restarting the launcher."
-            -996 -> "Fatal Error: Native library loading failed.\nThe game's native libraries could not be loaded. This may be due to:\n• Corrupted installation\n• Incompatible architecture\n• Missing system libraries"
-            -995 -> "Fatal Error: JVM launch exception occurred.\nAn unexpected error prevented the game from starting."
-            -1 -> "Fatal Error: Java Runtime library (libjli.so) failed to load.\nPossible causes:\n• Java Runtime is corrupted\n• Incompatible JRE version\n• Missing JRE files\n\nTry:\n• Reinstalling the Java Runtime\n• Using a different JRE version"
-            in 1..255 -> "Game exited with error code: $code\n\nCommon causes:\n• Out of memory (try increasing RAM allocation)\n• Incompatible mods/modloader\n• Corrupted game files\n• Graphics driver issues"
-            else -> if (code < 0) {
-                "Unknown fatal error occurred (code: $code)."
-            } else {
-                "Game exited with unknown code: $code."
-            }
-        }
-        return "$baseMsg\n\n$rendererInfo"
-    }
-
-    private fun getRendererDebugInfo(): String {
-        return try {
-            if (Renderers.isCurrentRendererValid()) {
-                val renderer = Renderers.getCurrentRenderer()
-                buildString {
-                    append("━━━ Renderer Info ━━━")
-                    append("\nRenderer: ${renderer.getRendererName()} (${renderer.getRendererId()})")
-                    renderer.getRendererSummary()?.let { append("\nSummary: $it") }
-                    append("\n\nTry changing the renderer in Settings → Renderer")
-                    append("\nIf the issue persists, try a different renderer type")
-                }
-            } else {
-                "Renderer: Not initialized"
-            }
-        } catch (e: Exception) {
-            "Renderer: Unable to get renderer info"
         }
     }
 

@@ -78,7 +78,6 @@ import com.movtery.zalithlauncher.game.launch.LaunchConfig
 import com.movtery.zalithlauncher.game.launch.Launcher
 import com.movtery.zalithlauncher.game.launch.handler.AbstractHandler
 import com.movtery.zalithlauncher.game.launch.handler.GameHandler
-import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.game.launch.handler.HandlerType
 import com.movtery.zalithlauncher.game.launch.handler.JVMHandler
 import com.movtery.zalithlauncher.game.multirt.RuntimesManager
@@ -175,39 +174,28 @@ class VMViewModel : ViewModel() {
 
         _session = when {
             bundle.getBoolean(INTENT_RUN_GAME) -> {
-                Logger.info("VMActivity", "Creating game launch session...")
                 val config: LaunchConfig = bundle.getParcelableSafely(INTENT_GAME_CONFIG, LaunchConfig::class.java)
                     ?: throw IllegalStateException("No launch config has been set.")
 
-                Logger.info("VMActivity", "Launch config received - Version: ${config.version.getVersionName()}, Account: ${config.account.username}")
-                Logger.info("VMActivity", "Creating GameLauncher instance...")
-                
-                val launcher = try {
-                    GameLauncher(
-                        activity = activity,
-                        config = config,
-                        onExit = { code, isSignal ->
-                            if (code == 0) {
-                                val finishedCount = AllSettings.finishedGame.getValue()
-                                if (finishedCount < Int.MAX_VALUE)  {
-                                    AllSettings.finishedGame.save(finishedCount + 1)
-                                }
-                            }
-                            exitListener(code, isSignal)
-                        },
-                        openPath = { folder ->
-                            _openFolderOperation.update {
-                                OpenFolderOperation.OpenFolder(folder)
+                val launcher = GameLauncher(
+                    activity = activity,
+                    config = config,
+                    onExit = { code, isSignal ->
+                        if (code == 0) {
+                            val finishedCount = AllSettings.finishedGame.getValue()
+                            if (finishedCount < Int.MAX_VALUE)  {
+                                AllSettings.finishedGame.save(finishedCount + 1)
                             }
                         }
-                    )
-                } catch (e: Exception) {
-                    Logger.error("VMActivity", "FATAL: Failed to create GameLauncher", e)
-                    LoggerBridge.append("FATAL ERROR: Failed to create GameLauncher - ${e.message}")
-                    throw e
-                }
+                        exitListener(code, isSignal)
+                    },
+                    openPath = { folder ->
+                        _openFolderOperation.update {
+                            OpenFolderOperation.OpenFolder(folder)
+                        }
+                    }
+                )
 
-                Logger.info("VMActivity", "GameLauncher created successfully")
                 sender = LWJGLCharSender
 
                 LaunchSession(
@@ -355,36 +343,25 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
 
         val bundle = intent.extras ?: throw IllegalStateException("Unknown VM launch state!")
 
-        try {
-            vmViewModel.initSession(
-                activity = this,
-                bundle = bundle,
-                errorViewModel = errorViewModel,
-                eventViewModel = eventViewModel,
-                gamepadViewModel = gamepadViewModel,
-                exitListener = { exitCode: Int, isSignal: Boolean ->
-                    stopAllService()
-                    if (exitCode != 0) {
-                        val logPath = withLauncher {
-                            getLogFile().absolutePath
-                        }
-                        showExitMessage(this@VMActivity, exitCode, isSignal, logPath)
-                    } else {
-                        //重启启动器
-                        ProcessPhoenix.triggerRebirth(this@VMActivity)
+        vmViewModel.initSession(
+            activity = this,
+            bundle = bundle,
+            errorViewModel = errorViewModel,
+            eventViewModel = eventViewModel,
+            gamepadViewModel = gamepadViewModel,
+            exitListener = { exitCode: Int, isSignal: Boolean ->
+                stopAllService()
+                if (exitCode != 0) {
+                    val logPath = withLauncher {
+                        getLogFile().absolutePath
                     }
+                    showExitMessage(this@VMActivity, exitCode, isSignal, logPath)
+                } else {
+                    //重启启动器
+                    ProcessPhoenix.triggerRebirth(this@VMActivity)
                 }
-            )
-        } catch (e: Exception) {
-            Logger.error("VMActivity", "FATAL: Failed to initialize game session", e)
-            LoggerBridge.append("FATAL ERROR: Failed to initialize game session - ${e.message}")
-            errorViewModel.showError(ErrorViewModel.ThrowableMessage(
-                title = "Launch Failed",
-                message = "Could not initialize the game session:\n${e.message}"
-            ))
-            finish()
-            return
-        }
+            }
+        )
 
         //设置画面渲染输出回调
         CallbackBridge.setGraphicOutputListener {
@@ -540,14 +517,16 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         lifecycleScope.launch {
             if (vmViewModel.isRunning) {
                 delay(50L.milliseconds)
-                refreshWindowSize(screenSize = vmViewModel.screenSize)
+                withContext(Dispatchers.Main) {
+                    refreshWindowSize(screenSize = vmViewModel.screenSize)
+                }
             }
         }
     }
 
-    private suspend fun refreshWindowSize(
+    private fun refreshWindowSize(
         screenSize: IntSize
-    ): IntSize = withContext(Dispatchers.Main) {
+    ): IntSize {
         fun getDisplayPixels(pixels: Int): Int {
             return withHandler {
                 when (type) {
@@ -563,7 +542,7 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         ZLBridgeStates.onWindowChange()
         CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight)
 
-        return@withContext IntSize(windowWidth, windowHeight)
+        return IntSize(windowWidth, windowHeight)
     }
 
     override fun onDestroy() {
@@ -713,10 +692,8 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
                 vmViewModel.screenSize = screenSize
                 vmViewModel.screenSizeBridge.provideData(screenSize)
                 if (changed) {
-                    launch {
-                        refreshWindowSize(screenSize = screenSize)
-                        vmViewModel.onConfigurationChanged(false)
-                    }
+                    refreshWindowSize(screenSize = screenSize)
+                    vmViewModel.onConfigurationChanged(false)
                 }
             }
 

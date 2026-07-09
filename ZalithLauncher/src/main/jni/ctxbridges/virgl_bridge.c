@@ -32,17 +32,16 @@ void *egl_make_current(void *window) {
         );
 
         if (success == EGL_FALSE)
-            printf("EGLBridge: Error: eglMakeCurrent() failed: %d\n", eglGetError_p());
+            printf("EGLBridge: Error: eglMakeCurrent() failed: %p\n", eglGetError_p());
         else printf("EGLBridge: eglMakeCurrent() succeed!\n");
 
     
         printf("VirGL: vtest_main = %p\n", vtest_main_p);
         printf("VirGL: Calling VTest server's main function\n");
-        vtest_main_p(3, (char*[]){"vtest", "--no-loop-or-fork", "--use-gles", NULL, NULL});
+        vtest_main_p(3, (const char*[]){"vtest", "--no-loop-or-fork", "--use-gles", NULL, NULL});
     } else {
         return NULL;
     }
-    return NULL;
 }
 
 bool loadSymbolsVirGL() {
@@ -75,7 +74,7 @@ int virglInit() {
         potatoBridge.eglDisplay = eglGetDisplay_p(EGL_DEFAULT_DISPLAY);
         if (potatoBridge.eglDisplay == EGL_NO_DISPLAY)
         {
-            printf("EGLBridge: Error eglGetDefaultDisplay() failed: %d\n", eglGetError_p());
+            printf("EGLBridge: Error eglGetDefaultDisplay() failed: %p\n", eglGetError_p());
             return 0;
         }
     }
@@ -83,7 +82,7 @@ int virglInit() {
     printf("EGLBridge: Initializing\n");
     if (!eglInitialize_p(potatoBridge.eglDisplay, NULL, NULL))
     {
-        printf("EGLBridge: Error eglInitialize() failed: %d\n", eglGetError_p());
+        printf("EGLBridge: Error eglInitialize() failed: %s\n", eglGetError_p());
         return 0;
     }
 
@@ -103,7 +102,7 @@ int virglInit() {
 
     if (!eglChooseConfig_p(potatoBridge.eglDisplay, attribs, &config, 1, &num_configs))
     {
-        printf("EGLBridge: Error couldn't get an EGL visual config: %d\n", eglGetError_p());
+        printf("EGLBridge: Error couldn't get an EGL visual config: %s\n", eglGetError_p());
         return 0;
     }
 
@@ -112,7 +111,7 @@ int virglInit() {
 
     if (!eglGetConfigAttrib_p(potatoBridge.eglDisplay, config, EGL_NATIVE_VISUAL_ID, &vid))
     {
-        printf("EGLBridge: Error eglGetConfigAttrib() failed: %d\n", eglGetError_p());
+        printf("EGLBridge: Error eglGetConfigAttrib() failed: %s\n", eglGetError_p());
         return 0;
     }
 
@@ -124,7 +123,7 @@ int virglInit() {
 
     if (!potatoBridge.eglSurface)
     {
-        printf("EGLBridge: Error eglCreateWindowSurface failed: %d\n", eglGetError_p());
+        printf("EGLBridge: Error eglCreateWindowSurface failed: %p\n", eglGetError_p());
         return 0;
     }
 

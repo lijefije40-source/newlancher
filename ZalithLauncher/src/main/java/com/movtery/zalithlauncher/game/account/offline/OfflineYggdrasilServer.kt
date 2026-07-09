@@ -72,14 +72,9 @@ class OfflineYggdrasilServer(
 ) {
     private val charactersByUuid = ConcurrentHashMap<String, Character>()
     private val charactersByName = ConcurrentHashMap<String, Character>()
-    private val keyPair by lazy {
-        Logger.debug(TAG, "Generating RSA key pair...")
-        KeyPairGenerator.getInstance("RSA").apply {
-            initialize(2048)
-        }.genKeyPair().also {
-            Logger.debug(TAG, "RSA key pair generated successfully")
-        }
-    }
+    private val keyPair: KeyPair = KeyPairGenerator.getInstance("RSA").apply {
+        initialize(2048)
+    }.genKeyPair()
 
     private val serverStartedLatch = CountDownLatch(1)
     private var isServerRunning = false
@@ -87,68 +82,61 @@ class OfflineYggdrasilServer(
     private var server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>? = null
 
     fun start() {
-        try {
-            server = embeddedServer(CIO, port = port) {
-                install(ContentNegotiation) {
-                    json(Json {
-                        prettyPrint = true
-                        isLenient = true
-                        encodeDefaults = true
-                    })
-                }
-
-                routing {
-                    suspend fun RoutingContext.runCatched(
-                        block: suspend RoutingContext.() -> Unit
-                    ) {
-                        runCatching {
-                            block()
-                        }.onFailure { e ->
-                            Logger.error(TAG, "Internal server error", e)
-                        }
-                    }
-
-                    get("/") {
-                        runCatched { call.respondText(root(), ContentType.Application.Json) }
-                    }
-                    get("/status") {
-                        runCatched { call.respondText(status(), ContentType.Application.Json) }
-                    }
-                    post("/api/profiles/minecraft") {
-                        runCatched { call.respondText(profiles(call), ContentType.Application.Json) }
-                    }
-                    get("/sessionserver/session/minecraft/hasJoined") {
-                        runCatched { call.respondText(hasJoined(call), ContentType.Application.Json) }
-                    }
-                    post("/sessionserver/session/minecraft/join") {
-                        runCatched { call.respond(HttpStatusCode.NoContent) }
-                    }
-                    get("/sessionserver/session/minecraft/profile/{uuid}") {
-                        runCatched { call.respondText(profile(call), ContentType.Application.Json) }
-                    }
-                    get("/textures/{hash}") {
-                        runCatched { call.respond(texture(call)) }
-                    }
-                }
-            }.apply {
-                monitor.subscribe(ApplicationStarted) {
-                    //服务器成功启动
-                    serverStartedLatch.countDown()
-                }
+        server = embeddedServer(CIO, port = port) {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    encodeDefaults = true
+                })
             }
 
-            server?.start(wait = false)
+            routing {
+                suspend fun RoutingContext.runCatched(
+                    block: suspend RoutingContext.() -> Unit
+                ) {
+                    runCatching {
+                        block()
+                    }.onFailure { e ->
+                        Logger.error(TAG, "Internal server error", e)
+                    }
+                }
 
-            //等待服务器启动完成
-            val startTimeout = 10L //10秒超时
-            if (serverStartedLatch.await(startTimeout, TimeUnit.SECONDS)) {
-                isServerRunning = true
-            } else {
-                Logger.warning(TAG, "Offline Yggdrasil server failed to start within ${startTimeout}s timeout")
+                get("/") {
+                    runCatched { call.respondText(root(), ContentType.Application.Json) }
+                }
+                get("/status") {
+                    runCatched { call.respondText(status(), ContentType.Application.Json) }
+                }
+                post("/api/profiles/minecraft") {
+                    runCatched { call.respondText(profiles(call), ContentType.Application.Json) }
+                }
+                get("/sessionserver/session/minecraft/hasJoined") {
+                    runCatched { call.respondText(hasJoined(call), ContentType.Application.Json) }
+                }
+                post("/sessionserver/session/minecraft/join") {
+                    runCatched { call.respond(HttpStatusCode.NoContent) }
+                }
+                get("/sessionserver/session/minecraft/profile/{uuid}") {
+                    runCatched { call.respondText(profile(call), ContentType.Application.Json) }
+                }
+                get("/textures/{hash}") {
+                    runCatched { call.respond(texture(call)) }
+                }
             }
-        } catch (e: Exception) {
-            Logger.error(TAG, "Failed to start offline Yggdrasil server", e)
-            isServerRunning = false
+        }.apply {
+            monitor.subscribe(ApplicationStarted) {
+                //服务器成功启动
+                serverStartedLatch.countDown()
+            }
+        }
+
+        server?.start(wait = false)
+
+        //等待服务器启动完成
+        val startTimeout = 10L //10秒超时
+        if (serverStartedLatch.await(startTimeout, TimeUnit.SECONDS)) {
+            isServerRunning = true
         }
     }
 

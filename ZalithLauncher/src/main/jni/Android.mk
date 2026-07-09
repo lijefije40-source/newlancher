@@ -109,9 +109,5 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 # delete fake libs after linked
-ifeq ($(OS),Windows_NT)
-$(info $(shell cmd /c "del /q $(subst /,\,$(HERE_PATH)/../jniLibs/*/libawt_headless.so)" 2>nul))
-else
-$(info $(shell rm $(HERE_PATH)/../jniLibs/*/libawt_headless.so 2>/dev/null))
-endif
+$(info $(shell (rm $(HERE_PATH)/../jniLibs/*/libawt_headless.so)))
 

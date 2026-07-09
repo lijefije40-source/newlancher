@@ -31,7 +31,7 @@ fun <T : Parcelable> Bundle.getParcelableSafely(key: String?, clazz: Class<T>): 
     }
 }
 
-@Suppress("DEPRECATION", "UNCHECKED_CAST")
+@Suppress("DEPRECATION")
 fun <T: Serializable> Bundle.getSerializableSafely(key: String?, clazz: Class<T>): T? {
     return when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, clazz)

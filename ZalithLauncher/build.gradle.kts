@@ -23,33 +23,21 @@ val launcherVersionCode = (project.findProperty("launcher_version_code") as? Str
 val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: error("The \"launcher_version_name\" property is not set in gradle.properties.")
 
 val defaultOAuthClientID = project.findProperty("oauth_client_id") as? String
-val defaultStorePassword = project.findProperty("default_store_password") as? String ?: "zalithpassword"
-val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: "zalithpassword"
+val defaultStorePassword = project.findProperty("default_store_password") as? String ?: error("The \"default_store_password\" property is not set in gradle.properties.")
+val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: error("The \"default_key_password\" property is not set in gradle.properties.")
 val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? String
 
 val projectArch: String = System.getProperty("arch", "all")
 
 fun getKeyFromLocal(envKey: String, fileName: String? = null, default: String? = null): String {
-    // 1. Check Gradle Properties (usually from command line -P)
-    val propertyKey = envKey.lowercase()
-    val propertyValue = project.findProperty(propertyKey) as? String
-    if (!propertyValue.isNullOrBlank()) return propertyValue.trim()
-
-    // 2. Check Environment Variables (CI Secrets)
-    val envValue = System.getenv(envKey)
-    if (!envValue.isNullOrBlank()) return envValue.trim()
-
-    // 3. Check Local File
-    if (fileName != null) {
+    val key = System.getenv(envKey)
+    return key ?: fileName?.let {
         val file = File(rootDir, fileName)
-        if (file.canRead() && file.isFile) return file.readText().trim()
+        if (file.canRead() && file.isFile) file.readText() else null
+    } ?: default ?: run {
+        logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
+        ""
     }
-
-    // 4. Fallback to default
-    if (default != null) return default
-
-    logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
-    return ""
 }
 
 android {
@@ -57,28 +45,23 @@ android {
     compileSdk = 37
 
     signingConfigs {
-        val keystorePath = getKeyFromLocal("KEYSTORE_PATH", null, "zalith_launcher.jks")
-        val keystoreFile = file(keystorePath)
-
         create("releaseBuild") {
-            if (keystoreFile.exists()) {
-                storeFile = keystoreFile
-                storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt", defaultStorePassword)
-                keyAlias = getKeyFromLocal("KEY_ALIAS", null, "movtery_zalith")
-                keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt", defaultKeyPassword)
-            } else {
-                logger.warn("BUILD: Keystore file not found at ${keystoreFile.absolutePath}. Release build will use default signing.")
-                // Fallback to something safe or default
-                storeFile = file("mykey.jks")
-                storePassword = "zalithpassword"
-                keyAlias = "movtery_zalith"
-                keyPassword = "zalithpassword"
-            }
+            storeFile = file("zalith_launcher.jks")
+            storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt")
+            keyAlias = "movtery_zalith"
+            keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
+        }
+        create("debugBuild") {
+            storeFile = file("zalith_launcher_debug.jks")
+            storePassword = defaultStorePassword
+            keyAlias = "movtery_zalith_debug"
+            keyPassword = defaultKeyPassword
         }
     }
 
     defaultConfig {
         applicationId = zalithPackageName
+        applicationIdSuffix = ".v2"
         minSdk = 26
         targetSdk = 35
         versionCode = launcherVersionCode
@@ -100,7 +83,7 @@ android {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            signingConfig = signingConfigs.getByName("releaseBuild")
+            signingConfig = signingConfigs.getByName("debugBuild")
         }
     }
 
@@ -131,11 +114,6 @@ android {
             useLegacyPackaging = true
             pickFirsts += listOf("**/libbytehook.so")
         }
-    }
-
-    // Fix for: java.io.FileNotFoundException ... libawt_xawt.so does not exist
-    defaultConfig {
-        manifestPlaceholders["extractNativeLibs"] = "true"
     }
 
     compileOptions {

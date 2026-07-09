@@ -153,22 +153,15 @@ private fun createOldOptiFineJson(
         appendLine("  \"mainClass\": \"net.minecraft.launchwrapper.Launch\",")
 
         if (vanillaVersion.isOldVersion()) {
-            val args = vanillaVersion.minecraftArguments ?: ""
-            val tweakArg = "--tweakClass optifine.OptiFineTweaker"
-            val finalArgs = if (args.contains(tweakArg)) args else "$args $tweakArg"
             appendLine("  \"minimumLauncherVersion\": 18,")
-            appendLine("  \"minecraftArguments\": \"${finalArgs.trim()}\"")
+            appendLine("  \"minecraftArguments\": \"${vanillaVersion.minecraftArguments}  --tweakClass optifine.OptiFineTweaker\"")
             appendLine("}")
         } else {
-            val existingTweaks = vanillaVersion.arguments?.game
-                ?.any { it is String && it.contains("optifine.OptiFineTweaker") } == true
             appendLine("  \"minimumLauncherVersion\": \"21\",")
             appendLine("  \"arguments\": {")
             appendLine("    \"game\": [")
-            if (!existingTweaks) {
-                appendLine("      \"--tweakClass\",")
-                appendLine("      \"optifine.OptiFineTweaker\"")
-            }
+            appendLine("      \"--tweakClass\",")
+            appendLine("      \"optifine.OptiFineTweaker\"")
             appendLine("    ]")
             appendLine("  }")
             appendLine("}")

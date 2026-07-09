@@ -27,6 +27,7 @@ import com.movtery.zalithlauncher.game.account.auth_server.data.AuthServer
 import com.movtery.zalithlauncher.game.account.auth_server.data.AuthServerDao
 import com.movtery.zalithlauncher.path.PathManager
 import com.movtery.zalithlauncher.setting.AllSettings
+import com.movtery.zalithlauncher.utils.isInGreaterChina
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.network.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
@@ -211,15 +212,17 @@ object AccountsManager {
      */
     private fun refreshCurrentAccountState() {
         val currentAccount = getCurrentAccount()
-        // تم إزالة القيود - السماح بجميع أنواع الحسابات بدون قيود
-        _currentAccountFlow.update { currentAccount }
-        _isOffline.update { false }
+        val isOffline = checkLimit()
+        _currentAccountFlow.update {
+            //若处于非正版状态，不允许使用账号
+            if (isOffline) null else currentAccount
+        }
+        _isOffline.update { isOffline }
     }
 
-    @Deprecated("تم إلغاء نظام القيود - لم يعد يستخدم")
     private fun checkLimit(): Boolean {
-        // تم تعطيل القيد - دائماً يسمح بجميع أنواع الحسابات
-        return false
+        val circumventLimit = File(PathManager.DIR_FILES_EXTERNAL, "circumventLimit")
+        return !circumventLimit.exists() && !isInGreaterChina() && !hasMicrosoftAccount()
     }
 
     /**

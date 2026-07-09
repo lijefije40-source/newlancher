@@ -38,9 +38,6 @@ import java.util.concurrent.TimeUnit
 
 val URL_USER_AGENT: String = "${BuildKeys.LAUNCHER_SHORT_NAME}/Android_${BuildConfig.VERSION_NAME}"
 val TIME_OUT = TimeUnit.SECONDS.toMillis(30L)
-// Optimized connection pool settings for better performance
-private const val MAX_IDLE_CONNECTIONS = 5
-private const val KEEP_ALIVE_DURATION = 5L // minutes
 
 const val HOST_CURSEFORGE_API = "api.curseforge.com"
 const val HOST_CURSEFORGE_EDGE = "edge.forgecdn.net"
@@ -117,24 +114,6 @@ private val CURSEFORGE_INTERCEPTOR = Interceptor { chain ->
     chain.proceed(request)
 }
 
-/**
- * An [Interceptor] that ensures the [URL_USER_AGENT] header is present on every request.
- *
- * If a request already carries a User-Agent header (set by [createRequestBuilder] or
- * similar), this interceptor is a no-op — avoiding duplicate headers.
- */
-private val USER_AGENT_INTERCEPTOR = Interceptor { chain ->
-    val request = chain.request()
-    if (request.header("User-Agent") != null) {
-        chain.proceed(request)
-    } else {
-        val newRequest = request.newBuilder()
-            .header("User-Agent", URL_USER_AGENT)
-            .build()
-        chain.proceed(newRequest)
-    }
-}
-
 fun createRequestBuilder(url: String): Request.Builder {
     return createRequestBuilder(url, null)
 }
@@ -148,41 +127,32 @@ fun createRequestBuilder(url: String, body: RequestBody?): Request.Builder {
 fun createOkHttpClient(): OkHttpClient = createOkHttpClientBuilder().build()
 
 /**
- * 创建一个OkHttpClient،可自定义一些内容
+ * 创建一个OkHttpClient，可自定义一些内容
  */
 fun createOkHttpClientBuilder(action: (OkHttpClient.Builder) -> Unit = { }): OkHttpClient.Builder {
     return OkHttpClient.Builder()
         .callTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(CURSEFORGE_INTERCEPTOR)
-        .addInterceptor(USER_AGENT_INTERCEPTOR)
-        .connectionPool(okhttp3.ConnectionPool(MAX_IDLE_CONNECTIONS, KEEP_ALIVE_DURATION, TimeUnit.MINUTES))
-        .retryOnConnectionFailure(true)
         .apply(action)
 }
 
 /**
  * 创建用于文件下载的 OkHttpClient。
- * 与普通 API 调用不同،文件下载需要更长的超时配置،且不设 callTimeout
- * （因为文件大小差异很大،不能用一个固定值限制整体下载时间）。
+ * 与普通 API 调用不同，文件下载需要更长的超时配置，且不设 callTimeout
+ * （因为文件大小差异很大，不能用一个固定值限制整体下载时间）。
  *
  * 使用 OkHttp 替代 HttpURLConnection 的主要原因是：
- * OkHttp 使用自实现的 AsyncTimeout 机制،比依赖操作系统 socket 超时的
- * HttpURLConnection 在 Android 上更加可靠،能有效避免"卡 0b/s"问题。
+ * OkHttp 使用自实现的 AsyncTimeout 机制，比依赖操作系统 socket 超时的
+ * HttpURLConnection 在 Android 上更加可靠，能有效避免"卡 0b/s"问题。
  */
 val DOWNLOAD_OKHTTP_CLIENT: OkHttpClient by lazy {
     OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .pingInterval(30, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)
-        .connectionPool(okhttp3.ConnectionPool(10, 10, TimeUnit.MINUTES))
         .addInterceptor(CURSEFORGE_INTERCEPTOR)
-        .addInterceptor(USER_AGENT_INTERCEPTOR)
         .build()
-        // 注意：不设置 callTimeout،因为文件大小差异极大
+        // 注意：不设置 callTimeout，因为文件大小差异极大
         // 协程层的 withTimeout 提供整体兜底保护
 }

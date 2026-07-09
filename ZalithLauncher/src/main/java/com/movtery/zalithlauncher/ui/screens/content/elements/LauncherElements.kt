@@ -169,8 +169,11 @@ fun LaunchGameOperation(
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activity, R.string.game_launch_no_account, Toast.LENGTH_SHORT).show()
                 }
-                // تم إزالة القيد - دائماً يفتح القائمة العادية التي تحتوي على جميع خيارات الحسابات
-                toAccountManageScreen(FirstLoginMenu.NORMAL)
+                val isOffline = AccountsManager.isOffline.value
+                toAccountManageScreen(
+                    if (isOffline) FirstLoginMenu.MICROSOFT
+                    else FirstLoginMenu.NORMAL
+                )
                 updateOperation(LaunchGameOperation.None)
             }
         }

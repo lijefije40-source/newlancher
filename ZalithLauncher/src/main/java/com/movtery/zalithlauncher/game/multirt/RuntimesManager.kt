@@ -180,14 +180,8 @@ object RuntimesManager {
 
         val localXawtLib = File(PathManager.DIR_NATIVE_LIB, "libawt_xawt.so")
         val targetXawtLib = dest.child(libFolder, "libawt_xawt.so")
-        
-        // Check if source file exists before copying
-        if (localXawtLib.exists()) {
-            if (targetXawtLib.exists()) targetXawtLib.delete()
-            FileUtils.copyFile(localXawtLib, targetXawtLib)
-        } else {
-            Logger.warning(TAG, "libawt_xawt.so not found in native lib directory: ${localXawtLib.absolutePath}")
-        }
+        if (targetXawtLib.exists()) targetXawtLib.delete()
+        FileUtils.copyFile(localXawtLib, targetXawtLib)
     }
 
     @Throws(IOException::class)
@@ -257,19 +251,6 @@ object RuntimesManager {
             val basePath = File(runtimePath)
             val files: Collection<File> = FileUtils.listFiles(basePath, arrayOf("pack"), true)
 
-            val unpack200File = File(nativeLibraryDir, "libunpack200.so")
-            
-            // Check if unpack200 binary exists
-            if (!unpack200File.exists()) {
-                Logger.warning(TAG, "libunpack200.so not found in $nativeLibraryDir. Skipping unpack200 process.")
-                return@withContext
-            }
-
-            // Ensure the file is executable
-            if (!unpack200File.canExecute()) {
-                unpack200File.setExecutable(true)
-            }
-
             val workDir = File(nativeLibraryDir)
             val processBuilder = ProcessBuilder().directory(workDir)
 
@@ -278,15 +259,12 @@ object RuntimesManager {
                 runCatching {
                     val destPath = jarFile.absolutePath.replace(".pack", "")
                     processBuilder.command(
-                        unpack200File.absolutePath,
+                        "./libunpack200.so",
                         "-r",
                         jarFile.absolutePath,
                         destPath
                     ).start().apply {
-                        val exitCode = waitFor()
-                        if (exitCode != 0) {
-                            Logger.warning(TAG, "unpack200 exited with code $exitCode for ${jarFile.name}")
-                        }
+                        waitFor()
                     }
                 }.onFailure { e ->
                     if (e is IOException) {
@@ -325,11 +303,7 @@ object RuntimesManager {
 
                 when {
                     tarEntry.isSymbolicLink -> try {
-                        destPath.parentFile?.ensureDirectory()
-                        if (destPath.exists()) {
-                            destPath.delete()
-                        }
-                        Os.symlink(tarEntry.linkName, destPath.absolutePath)
+                        Os.symlink(tarEntry.linkName, tarEntryName)
                     } catch (e: Throwable) {
                         Logger.error(TAG, "Exception occurred while creating symbolic link", e)
                     }

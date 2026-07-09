@@ -31,10 +31,6 @@ import com.movtery.zalithlauncher.game.account.microsoft.MinecraftProfileExcepti
 import com.movtery.zalithlauncher.game.account.microsoft.NotPurchasedMinecraftException
 import com.movtery.zalithlauncher.game.account.microsoft.XboxLoginException
 import com.movtery.zalithlauncher.game.account.microsoft.toLocal
-import com.movtery.zalithlauncher.game.diagnostics.GameDiagnostics
-import com.movtery.zalithlauncher.game.driver.TurnipDriverManager
-import com.movtery.zalithlauncher.game.renderer.RendererInterface
-import com.movtery.zalithlauncher.game.renderer.Renderers
 import com.movtery.zalithlauncher.game.version.download.DownloadMode
 import com.movtery.zalithlauncher.game.version.download.MinecraftDownloader
 import com.movtery.zalithlauncher.game.version.installed.GraphicsApi
@@ -51,13 +47,11 @@ import com.movtery.zalithlauncher.utils.network.toLocal
 import com.movtery.zalithlauncher.viewmodel.ErrorViewModel
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.ConnectException
 import java.net.UnknownHostException
 import java.nio.channels.UnresolvedAddressException
 import java.util.zip.ZipFile
-import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "LaunchGame"
 
@@ -128,27 +122,12 @@ object LaunchGame {
             mode = DownloadMode.VERIFY_AND_REPAIR,
             onCompletion = { task ->
                 task.updateProgress(-1f, null)
-                
-                Logger.info(TAG, "File verification completed, starting pre-launch preparation...")
-                
-                // تشخيص المشاكل قبل التشغيل
-                runDiagnostics(context, version, task, submitError)
-                
-                Logger.info(TAG, "Checking TouchController proxy...")
                 checkEnableTouchProxy(version)
-                
-                Logger.info(TAG, "Checking Vulkan capabilities...")
                 task.updateMessage(R.string.game_vulkan_check_title)
                 checkVulkanCapabilities(version, waitForVulkanChecker)
 
-                Logger.info(TAG, "All pre-launch checks completed, launching game...")
-                
-                // Use non-blocking delay and ensure we switch to Main thread for Activity launch
-                delay(500.milliseconds)
-                withContext(Dispatchers.Main) {
-                    runGame(context, version, account)
-                    exitActivity()
-                }
+                runGame(context, version, account)
+                exitActivity()
             },
             onError = { message ->
                 submitError(
@@ -159,67 +138,6 @@ object LaunchGame {
                 )
             }
         ).getDownloadTask()
-    }
-    
-    /**
-     * تشغيل التشخيص التلقائي وإصلاح المشاكل
-     */
-    private suspend fun runDiagnostics(
-        context: Context,
-        version: Version,
-        task: Task,
-        submitError: (ErrorViewModel.ThrowableMessage) -> Unit
-    ) {
-        try {
-            // لا نعرض رسالة في الـ Task لأن updateMessage يحتاج resource ID
-            
-            val renderer = Renderers.getCurrentRenderer()
-            val result = GameDiagnostics.diagnose(context, version, renderer)
-            
-            // إصلاح المشاكل تلقائياً
-            if (result.autoFixAvailable) {
-                val fixResult = GameDiagnostics.applyAutoFixes(result)
-                
-                if (fixResult.isSuccess) {
-                    Logger.info(TAG, "Auto-fix successful: ${fixResult.getOrNull()}")
-                } else {
-                    Logger.warning(TAG, "Auto-fix had errors: ${fixResult.exceptionOrNull()?.message}")
-                }
-            }
-            
-            // عرض التحذيرات المهمة
-            result.issues.filter { it.severity == GameDiagnostics.Severity.CRITICAL && !it.autoFixable }.forEach { issue ->
-                Logger.warning(TAG, "Critical issue: ${issue.title} - ${issue.description}")
-            }
-            
-            // تطبيق تعريفات Turnip إذا لزم الأمر
-            applyTurnipDriver(context, renderer)
-            
-        } catch (e: Exception) {
-            Logger.error(TAG, "Diagnostics failed", e)
-            // لا نوقف التشغيل، فقط نسجل الخطأ
-        }
-    }
-    
-    /**
-     * تطبيق تعريف Turnip المناسب
-     */
-    private fun applyTurnipDriver(context: Context, renderer: RendererInterface) {
-        val rendererName = renderer.getRendererId().lowercase()
-        
-        if (rendererName.contains("vulkan") || rendererName.contains("zink")) {
-            val recommendedDriver = TurnipDriverManager.getRecommendedDriver(context)
-            
-            if (recommendedDriver != null) {
-                val driverEnv = TurnipDriverManager.applyDriver(context, recommendedDriver)
-                
-                // إضافة متغيرات البيئة إلى المحرك
-                if (driverEnv.isNotEmpty()) {
-                    Logger.info(TAG, "Applied Turnip driver: ${recommendedDriver.name}")
-                    // TODO: دمج المتغيرات مع بيئة التشغيل
-                }
-            }
-        }
     }
 
     /**

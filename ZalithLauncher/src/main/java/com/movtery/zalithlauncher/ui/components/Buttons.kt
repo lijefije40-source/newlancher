@@ -51,7 +51,6 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TooltipScope
 import androidx.compose.material3.rememberTooltipState
-import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -300,7 +299,7 @@ fun TooltipIconButton(
 
     TooltipBox(
         modifier = modifier,
-        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
         tooltip = tooltip,
         state = tooltipState,
         enableUserInput = false

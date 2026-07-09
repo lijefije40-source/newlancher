@@ -47,7 +47,6 @@ import com.movtery.zalithlauncher.utils.string.insertJSONValueList
 import com.movtery.zalithlauncher.utils.string.isEmptyOrBlank
 import com.movtery.zalithlauncher.utils.string.isLowerTo
 import com.movtery.zalithlauncher.utils.string.isNotEmptyOrBlank
-import com.movtery.zalithlauncher.utils.string.splitPreservingQuotes
 import com.movtery.zalithlauncher.utils.string.toUnicodeEscaped
 import java.io.File
 
@@ -163,47 +162,31 @@ class LaunchArgs(
 
         if (account.isLocalAccount()) {
             if (account.hasSkinFile) {
-                try {
-                    //该离线账号拥有本地皮肤，启用离线yggdrasil服务器
-                    offlineServer.start()
-                    offlineServer.addCharacter(account)
-                    offlineServer.getPort()?.let { port ->
-                        val msg = "Using offline Yggdrasil server on port $port"
-                        LoggerBridge.append(msg)
-                        Logger.info(TAG, msg)
-                        argsList.add("-javaagent:${LibPath.AUTHLIB_INJECTOR.absolutePath}=http://localhost:$port")
-                        argsList.add("-Dauthlibinjector.side=client")
-                    } ?: run {
-                        //无法获取端口号，说明服务器未成功启动
-                        val msg = "Failed to start offline Yggdrasil server!"
-                        LoggerBridge.append(msg)
-                        Logger.warning(TAG, msg)
-                        //本次启动将被忽略，为避免浪费性能，关停服务器
-                        offlineServer.stop()
-                    }
-                } catch (e: Exception) {
-                    Logger.error(TAG, "Failed to start offline Yggdrasil server", e)
-                    LoggerBridge.append("ERROR: Offline Yggdrasil server failed to start: ${e.message}")
-                    // The game can still launch without the offline skin server
+                //该离线账号拥有本地皮肤，启用离线yggdrasil服务器
+                offlineServer.start()
+                offlineServer.addCharacter(account)
+                offlineServer.getPort()?.let { port ->
+                    val msg = "Using offline Yggdrasil server on port $port"
+                    LoggerBridge.append(msg)
+                    Logger.info(TAG, msg)
+                    argsList.add("-javaagent:${LibPath.AUTHLIB_INJECTOR.absolutePath}=http://localhost:$port")
+                    argsList.add("-Dauthlibinjector.side=client")
+                } ?: run {
+                    //无法获取端口号，说明服务器未成功启动
+                    val msg = "Failed to start offline Yggdrasil server!"
+                    LoggerBridge.append(msg)
+                    Logger.warning(TAG, msg)
+                    //本次启动将被忽略，为避免浪费性能，关停服务器
+                    offlineServer.stop()
                 }
             }
         } else if (account.isAuthServerAccount()) {
-            val baseUrl = account.otherBaseUrl
-            if (baseUrl != null) {
-                if (baseUrl.contains("auth.mc-user.com")) {
-                    addAgentIfExists(LibPath.NIDE_8_AUTH, "${baseUrl.replace("https://auth.mc-user.com:233/", "")}")?.let { agent ->
-                        argsList.add(agent)
-                        argsList.add("-Dnide8auth.client=true")
-                    }
-                } else {
-                    addAgentIfExists(LibPath.AUTHLIB_INJECTOR, baseUrl)?.let { agent ->
-                        argsList.add(agent)
-                        argsList.add("-Dauthlibinjector.side=client")
-                    }
-                }
+            if (account.otherBaseUrl!!.contains("auth.mc-user.com")) {
+                argsList.add("-javaagent:${LibPath.NIDE_8_AUTH.absolutePath}=${account.otherBaseUrl!!.replace("https://auth.mc-user.com:233/", "")}")
+                argsList.add("-Dnide8auth.client=true")
             } else {
-                LoggerBridge.append("ERROR: Auth server account has no base URL configured")
-                Logger.warning(TAG, "Auth server account ${account.username} has no base URL")
+                argsList.add("-javaagent:${LibPath.AUTHLIB_INJECTOR.absolutePath}=${account.otherBaseUrl}")
+                argsList.add("-Dauthlibinjector.side=client")
             }
         }
 
@@ -363,19 +346,18 @@ class LaunchArgs(
 
         setLauncherInfo(varArgMap)
 
-        val oldArgs = gameManifest.minecraftArguments
-        if (oldArgs != null) {
-            // Support Minecraft pre-1.13: single string with ${var} tokens
-            return insertJSONValueList(
-                oldArgs.splitPreservingQuotes().toTypedArray(),
-                varArgMap
-            )
+        val minecraftArgs: MutableList<String> = ArrayList()
+        gameManifest.arguments?.apply {
+            // Support Minecraft 1.13+
+            game.forEach { if (it is String) minecraftArgs.add(it) }
         }
 
-        // Support Minecraft 1.13+: structured arguments.game array
-        val newArgs = gameManifest.arguments?.game?.mapNotNull { it as? String }
-            ?: emptyList()
-        return insertJSONValueList(newArgs.toTypedArray(), varArgMap)
+        return insertJSONValueList(
+            splitAndFilterEmpty(
+                gameManifest.minecraftArguments ?:
+                minecraftArgs.toTypedArray().joinToString(" ")
+            ), varArgMap
+        )
     }
 
     private fun setLauncherInfo(verArgMap: MutableMap<String, String>) {
@@ -386,12 +368,11 @@ class LaunchArgs(
             ?: gameManifest.type
     }
 
-    private fun addAgentIfExists(agentFile: File, arg: String): String? {
-        if (!agentFile.exists()) {
-            LoggerBridge.append("WARNING: Agent file not found: ${agentFile.absolutePath}")
-            Logger.warning(TAG, "Agent file not found: ${agentFile.absolutePath}. Skipping -javaagent.")
-            return null
+    private fun splitAndFilterEmpty(arg: String): Array<String> {
+        val list: MutableList<String> = ArrayList()
+        arg.split(" ").forEach {
+            if (it.isNotEmpty()) list.add(it)
         }
-        return "-javaagent:${agentFile.absolutePath}=$arg"
+        return list.toTypedArray()
     }
 }

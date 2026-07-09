@@ -357,8 +357,12 @@ private fun ActionsLayout(
             modifier = Modifier
                 .fillMaxWidth(),
             onClick = {
-                // تم إزالة القيد - دائماً يفتح قائمة خيارات الحسابات الكاملة
-                actions.onIntent(AccountManageIntent.UpdateLoginMenuOp(LoginMenuOperation.Login))
+                if (isOffline) {
+                    //非正版状态下，只允许创建微软账号
+                    actions.onIntent(AccountManageIntent.UpdateMicrosoftLoginOp(MicrosoftLoginOperation.Tip))
+                } else {
+                    actions.onIntent(AccountManageIntent.UpdateLoginMenuOp(LoginMenuOperation.Login))
+                }
             }
         ) {
             MarqueeText(text = stringResource(R.string.account_add_new_account))
@@ -721,7 +725,7 @@ private fun AccountsLayout(
                             .padding(vertical = 6.dp),
                         currentAccount = currentAccount,
                         account = account,
-                        enabled = true, // تم إزالة القيد - دائماً يسمح باختيار الحسابات
+                        enabled = !isOffline, //非正版状态下不允许选择任何状态
                         onSelected = { AccountsManager.setCurrentAccount(it) },
                         openChangeSkinDialog = {
                             if (!account.isAuthServerAccount()) {

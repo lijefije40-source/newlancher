@@ -30,7 +30,6 @@ abstract class ApkPluginManager {
         loaded: (ApkPlugin) -> Unit = {}
     )
 
-    @Suppress("DEPRECATION")
     protected fun Bundle.getVersionString(key: String): String? {
         return if (containsKey(key)) {
             runCatching {

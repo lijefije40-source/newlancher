@@ -45,8 +45,6 @@ import com.movtery.zalithlauncher.utils.device.Architecture.is64BitsDevice
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.string.splitPreservingQuotes
 import com.oracle.dalvik.VMLauncher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -81,44 +79,29 @@ abstract class Launcher(
         screenSize: IntSize,
         useLocalLanguage: Boolean = true
     ): Int {
-        return withContext(Dispatchers.IO) {
-            try {
-                LoggerBridge.append("▷ Initializing JVM launcher...")
-                Logger.info(TAG, "Starting JVM initialization")
-                ZLNativeInvoker.staticLauncher = this@Launcher
+        ZLNativeInvoker.staticLauncher = this
 
-                LoggerBridge.append("▷ Setting library path...")
-                val libPath = getRuntimeLibraryPath()
-                ZLBridge.setLdLibraryPath(libPath)
+        ZLBridge.setLdLibraryPath(getRuntimeLibraryPath())
 
-                LoggerBridge.appendTitle("Env Map")
-                LoggerBridge.append("▷ Setting environment variables...")
-                setEnv(screenSize)
+        LoggerBridge.appendTitle("Env Map")
+        setEnv(screenSize)
 
-                LoggerBridge.appendTitle("DLOPEN Java Runtime")
-                dlopenJavaRuntime()
+        LoggerBridge.appendTitle("DLOPEN Java Runtime")
+        dlopenJavaRuntime()
 
-                LoggerBridge.appendTitle("DLOPEN Engine")
-                dlopenEngine()
+        dlopenEngine()
 
-                LoggerBridge.append("▷ Proceeding to JVM launch...")
-                launchJavaVM(
-                    context = context,
-                    jvmArgs = jvmArgs,
-                    userHome = userHome,
-                    userArgs = userArgs,
-                    screenSize = screenSize,
-                    useLocalLanguage = useLocalLanguage
-                )
-            } catch (e: Throwable) {
-                LoggerBridge.append("FATAL ERROR in launchJvm: ${e.message}")
-                Logger.error(TAG, "Fatal error during JVM launch preparation", e)
-                -994
-            }
-        }
+        return launchJavaVM(
+            context = context,
+            jvmArgs = jvmArgs,
+            userHome = userHome,
+            userArgs = userArgs,
+            screenSize = screenSize,
+            useLocalLanguage = useLocalLanguage
+        )
     }
 
-    //伪 suspend 函数،等待 JVM 的退出代码
+    //伪 suspend 函数，等待 JVM 的退出代码
     private suspend fun launchJavaVM(
         context: Context,
         jvmArgs: List<String>,
@@ -127,17 +110,12 @@ abstract class Launcher(
         screenSize: IntSize,
         useLocalLanguage: Boolean
     ): Int {
-        Logger.info(TAG, "Preparing JVM arguments...")
-        LoggerBridge.append("Preparing JVM arguments...")
         val args = getJavaArgs(
             userHome = userHome,
             userArgumentsString = userArgs,
             screenSize = screenSize,
             useLocalLanguage = useLocalLanguage
         ).toMutableList()
-        
-        Logger.info(TAG, "Processing final user arguments...")
-        LoggerBridge.append("Processing final user args...")
         progressFinalUserArgs(args)
 
         args.addAll(jvmArgs)
@@ -156,76 +134,12 @@ abstract class Launcher(
             LoggerBridge.append("▷ $arg")
         }
 
-        Logger.info(TAG, "Setting up exit handlers...")
-        LoggerBridge.append("Setting up exit handlers...")
         ZLBridge.setupExitMethod(context.applicationContext)
         ZLBridge.initializeGameExitHook()
-        
-        val chdirPath = chdir()
-        Logger.info(TAG, "Changing directory to: $chdirPath")
-        LoggerBridge.append("Changing directory to: $chdirPath")
-        ZLBridge.chdir(chdirPath)
+        ZLBridge.chdir(chdir())
 
-        LoggerBridge.append("=".repeat(50))
-        LoggerBridge.append("Starting JVM launch...")
-        Logger.info(TAG, "Launching JVM with ${args.size} arguments")
-        LoggerBridge.append("=".repeat(50))
-        
-        val exitCode = try {
-            Logger.info(TAG, "Calling VMLauncher.launchJVM...")
-            LoggerBridge.append("Calling VMLauncher.launchJVM with ${args.size} arguments")
-            VMLauncher.launchJVM(args.toTypedArray())
-        } catch (e: UnsatisfiedLinkError) {
-            LoggerBridge.append("FATAL: Native library error: ${e.message}")
-            Logger.error(TAG, "Failed to load native library", e)
-            -996
-        } catch (e: Exception) {
-            LoggerBridge.append("FATAL: JVM Launch Exception: ${e.message}")
-            Logger.error(TAG, "Failed to launch JVM", e)
-            -995
-        }
-        
-        LoggerBridge.append("=".repeat(50))
+        val exitCode = VMLauncher.launchJVM(args.toTypedArray())
         LoggerBridge.append("Java Exit code: $exitCode")
-        Logger.info(TAG, "Java process exited with code: $exitCode")
-        LoggerBridge.append("=".repeat(50))
-        
-        // Log specific error codes
-        when (exitCode) {
-            -999 -> {
-                LoggerBridge.append("ERROR: Args array was null")
-                Logger.error(TAG, "Args array was null")
-            }
-            -998 -> {
-                LoggerBridge.append("ERROR: Args array was empty")
-                Logger.error(TAG, "Args array was empty")
-            }
-            -997 -> {
-                LoggerBridge.append("ERROR: Failed to convert args array")
-                Logger.error(TAG, "Failed to convert args array")
-            }
-            -996 -> {
-                LoggerBridge.append("ERROR: Native library loading failed")
-                Logger.error(TAG, "Native library loading failed")
-            }
-            -995 -> {
-                LoggerBridge.append("ERROR: JVM launch exception")
-                Logger.error(TAG, "JVM launch exception")
-            }
-            -1 -> {
-                LoggerBridge.append("ERROR: JLI library loading failed")
-                Logger.error(TAG, "JLI library loading failed")
-            }
-            in 1..255 -> {
-                LoggerBridge.append("WARNING: Java process exited with non-zero code")
-                Logger.warning(TAG, "Java process exited with non-zero code: $exitCode")
-            }
-            0 -> {
-                LoggerBridge.append("SUCCESS: Java process exited normally")
-                Logger.info(TAG, "Java process exited normally")
-            }
-        }
-        
         return exitCode
     }
 
@@ -271,58 +185,15 @@ abstract class Launcher(
 
             put("net.minecraft.clientmodname", BuildKeys.LAUNCHER_NAME)
 
-            // fml - Enhanced mod loading support
+            // fml
             put("fml.earlyprogresswindow", "false")
             put("fml.ignoreInvalidMinecraftCertificates", "true")
             put("fml.ignorePatchDiscrepancies", "true")
-            put("fml.skipFirstTextureLoad", "true") // Speed up mod loading
-            put("fml.confirmedCodecs", "true") // Skip codec confirmation
 
             put("loader.disable_forked_guis", "true")
             put("jdk.lang.Process.launchMechanism", "FORK")
 
             put("sodium.checks.issue2561", "false")
-            
-            // Better mod compatibility including old versions (1.0.0+)
-            put("legacy.debugClassLoading", "false") // Faster class loading
-            put("legacy.debugClassLoadingFiner", "false")
-            
-            // Forge-specific optimizations
-            put("forge.logging.console.level", "info") // Reduce log spam
-            put("forge.forceDisplayStopScreen", "false") // Skip crash screen on exit
-            
-            // Fabric/Quilt mod loader optimizations
-            put("fabric.gameJarPath.fallback", "true") // Better mod compatibility
-            put("fabric.development", "false") // Production mode
-            
-            // OptiFine compatibility
-            put("optifine.init", "true")
-            put("optifine.skipPrompt", "true")
-            
-            // OpenGL/LWJGL optimizations for better FPS
-            put("org.lwjgl.opengl.Display.enableOSXFullscreenModeAPI", "false")
-            put("org.lwjgl.opengl.Display.enableHighDPI", "false") // Better performance on weak devices
-            put("org.lwjgl.system.stackSize", "256") // Optimize stack size
-            put("org.lwjgl.system.SharedLibraryExtractPath", PathManager.DIR_CACHE.absolutePath)
-            
-            // Memory optimization
-            put("sun.rmi.dgc.client.gcInterval", "2147483646") // Reduce GC frequency
-            put("sun.rmi.dgc.server.gcInterval", "2147483646")
-            put("sun.io.useCanonCaches", "false") // Reduce IO caching overhead
-            
-            // Better threading for multi-core devices
-            val cores = java.lang.Runtime.getRuntime().availableProcessors()
-            put("java.util.concurrent.ForkJoinPool.common.parallelism", cores.toString())
-            
-            // Network optimizations
-            put("http.keepAlive", "true")
-            put("http.maxConnections", "8")
-            
-            // ClassLoader optimizations
-            put("sun.reflect.inflationThreshold", "0") // Faster reflection
-            
-            // Better resource loading
-            put("minecraft.applet.TargetDirectory", PathManager.DIR_GAME.absolutePath)
 
             putJavaArgs()
         }.map { entry ->
@@ -348,7 +219,7 @@ abstract class Launcher(
     private fun ensureDNSConfig(): File {
         val resolvFile = File(PathManager.DIR_GAME, "resolv.conf")
         if (!resolvFile.exists()) {
-            val configText = if (LocaleList.getDefault().get(0).country != "CN") {
+            val configText = if (LocaleList.getDefault().get(0).displayName != Locale.CHINA.displayName) {
                 """
                     nameserver 1.1.1.1
                     nameserver 1.0.0.1
@@ -377,17 +248,24 @@ abstract class Launcher(
         args: MutableList<String>,
         ramAllocation: Int = AllSettings.ramAllocation.getOrMin()
     ) {
-        // الجذر: منع الـ OOM Killer عبر تقييد الذاكرة بحد أقصى آمن (6GB) للهواتف
-        val safeRam = ramAllocation.coerceAtMost(6144)
-        if (ramAllocation > 6144) {
-            Logger.warning(TAG, "RAM allocation capped to 6GB for stability on Snapdragon 8")
-            LoggerBridge.append("▷ WARNING: RAM capped to 6GB for Android system stability")
-        }
-
         args.purgeArg("-Xms")
         args.purgeArg("-Xmx")
-        // ... (بقية الكود)
-        val ramAllocationString = safeRam.toString()
+        args.purgeArg("-d32")
+        args.purgeArg("-d64")
+        args.purgeArg("-Xint")
+        args.purgeArg("-XX:+UseTransparentHugePages")
+        args.purgeArg("-XX:+UseLargePagesInMetaspace")
+        args.purgeArg("-XX:+UseLargePages")
+        args.purgeArg("-Dorg.lwjgl.opengl.libname")
+        // Don't let the user specify a custom Freetype library (as the user is unlikely to specify a version compiled for Android)
+        args.purgeArg("-Dorg.lwjgl.freetype.libname")
+        // Overridden by us to specify the exact number of cores that the android system has
+        args.purgeArg("-XX:ActiveProcessorCount")
+
+        args.add("-javaagent:${LibPath.MIO_LIB_PATCHER.absolutePath}")
+
+        //Add automatically generated args
+        val ramAllocationString = ramAllocation.toString()
         args.add("-Xms${ramAllocationString}M")
         args.add("-Xmx${ramAllocationString}M")
 
@@ -402,77 +280,7 @@ abstract class Launcher(
         args.add("-Dorg.lwjgl.system.allocator=system")
 
         // Some phones are not using the right number of cores, fix that
-        val processorCount = java.lang.Runtime.getRuntime().availableProcessors()
-        args.add("-XX:ActiveProcessorCount=$processorCount")
-        
-        // Adaptive performance based on RAM allocation
-        val isLowEndDevice = ramAllocation <= 1024
-        val isMidRangeDevice = ramAllocation in 1025..2048
-        val isHighEndDevice = ramAllocation > 2048
-        
-        if (isLowEndDevice) {
-            // Optimizations for weak devices (<=1GB RAM)
-            args.add("-XX:+UseSerialGC") // Serial GC uses less memory
-            args.add("-XX:MaxGCPauseMillis=100")
-            args.add("-XX:MinHeapFreeRatio=20")
-            args.add("-XX:MaxHeapFreeRatio=40")
-            args.add("-XX:+DisableExplicitGC")
-            args.add("-XX:+UseStringDeduplication")
-            args.add("-XX:CompileThreshold=3000") // Higher threshold to save memory
-        } else if (isMidRangeDevice) {
-            // Balanced settings for mid-range devices (1-2GB RAM)
-            args.add("-XX:+UseG1GC")
-            args.add("-XX:+ParallelRefProcEnabled")
-            args.add("-XX:MaxGCPauseMillis=50")
-            args.add("-XX:G1NewSizePercent=20")
-            args.add("-XX:G1ReservePercent=20")
-            args.add("-XX:G1HeapRegionSize=16M")
-            args.add("-XX:+DisableExplicitGC")
-            args.add("-XX:+UseStringDeduplication")
-            args.add("-XX:CompileThreshold=1500")
-        } else {
-            // Performance settings for high-end devices (>2GB RAM)
-            args.add("-XX:+UseG1GC")
-            args.add("-XX:+ParallelRefProcEnabled")
-            args.add("-XX:MaxGCPauseMillis=30")
-            args.add("-XX:+UnlockExperimentalVMOptions")
-            args.add("-XX:G1NewSizePercent=30")
-            args.add("-XX:G1ReservePercent=10")
-            args.add("-XX:G1HeapRegionSize=32M")
-            args.add("-XX:+DisableExplicitGC")
-            args.add("-XX:+AlwaysPreTouch")
-            args.add("-XX:+UseStringDeduplication")
-            args.add("-XX:-UseAdaptiveSizePolicy")
-            args.add("-XX:CompileThreshold=1000") // Faster JIT for better performance
-            args.add("-XX:+UseFastAccessorMethods")
-            args.add("-XX:+OptimizeStringConcat")
-        }
-        
-        // Common optimizations for all devices
-        args.add("-XX:+UseCompressedOops") // Compressed pointers save memory
-        args.add("-XX:+UseCompressedClassPointers")
-        
-        // LWJGL optimizations for better rendering and FPS
-        args.add("-Dorg.lwjgl.util.NoChecks=true") // Disable runtime checks for performance
-        args.add("-Dorg.lwjgl.util.DebugLoader=false") // Disable debug loader
-        args.add("-Dfml.readTimeout=180") // Increase timeout for loading mods on slow devices
-        args.add("-Dfml.queryResult=confirm") // Auto-confirm queries
-        
-        // Minecraft-specific optimizations for old versions (1.0.0+)
-        args.add("-Djava.net.preferIPv4Stack=true") // Better compatibility with old versions
-        args.add("-Dminecraft.applet.TargetDirectory=${PathManager.DIR_GAME.absolutePath}")
-        args.add("-Dfml.ignoreInvalidMinecraftCertificates=true") // Support modded old versions
-        args.add("-Dfml.ignorePatchDiscrepancies=true")
-        
-        // Graphics optimizations for better FPS on all devices
-        args.add("-Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=true") // Fallback for weak GPUs
-        args.add("-Dorg.lwjgl.opengl.Window.undecorated=false")
-        
-        // Thread optimizations based on processor count
-        if (processorCount >= 4) {
-            args.add("-XX:ParallelGCThreads=${(processorCount * 0.75).toInt()}")
-            args.add("-XX:ConcGCThreads=${(processorCount * 0.25).toInt()}")
-        }
+        args.add("-XX:ActiveProcessorCount=${java.lang.Runtime.getRuntime().availableProcessors()}")
     }
 
     protected fun MutableList<String>.purgeArg(argStart: String) {
@@ -613,101 +421,31 @@ abstract class Launcher(
     }
 
     private fun dlopenJavaRuntime() {
-        LoggerBridge.append("▷ Starting Java Runtime library loading...")
-        LoggerBridge.append("▷ Runtime home: $runtimeHome")
-        
         var javaLibDir = "$runtimeHome${getJavaLibDir()}"
         val jliLibDir = if (File("$javaLibDir/jli/libjli.so").exists()) "$javaLibDir/jli" else javaLibDir
 
         if (runtime.isJDK8) {
             javaLibDir = "$runtimeHome/jre${getJavaLibDir()}"
-            LoggerBridge.append("▷ Detected JDK8, using jre subdirectory")
         }
         val jvmLibDir = "$javaLibDir${getJvmLibDir()}"
-        
-        LoggerBridge.append("▷ Java lib dir: $javaLibDir")
-        LoggerBridge.append("▷ JLI lib dir: $jliLibDir")
-        LoggerBridge.append("▷ JVM lib dir: $jvmLibDir")
-        
-        fun tryDlopen(path: String, name: String, critical: Boolean = true): Boolean {
-            val file = File(path)
-            if (!file.exists()) {
-                if (critical) {
-                    LoggerBridge.append("▷ WARNING: $name not found at: $path")
-                    Logger.warning(TAG, "$name not found at: $path")
-                }
-                return false
-            }
-            val result = ZLBridge.dlopen(path)
-            if (!result && critical) {
-                LoggerBridge.append("▷ ERROR: Failed to load $name")
-                Logger.error(TAG, "Failed to dlopen $name at: $path")
-            }
-            return result
+        ZLBridge.dlopen("$jliLibDir/libjli.so")
+        ZLBridge.dlopen("$jvmLibDir/libjvm.so")
+        ZLBridge.dlopen("$javaLibDir/libfreetype.so")
+        ZLBridge.dlopen("$javaLibDir/libverify.so")
+        ZLBridge.dlopen("$javaLibDir/libjava.so")
+        ZLBridge.dlopen("$javaLibDir/libnet.so")
+        ZLBridge.dlopen("$javaLibDir/libnio.so")
+        ZLBridge.dlopen("$javaLibDir/libawt.so")
+        ZLBridge.dlopen("$javaLibDir/libawt_headless.so")
+        ZLBridge.dlopen("$javaLibDir/libfontmanager.so")
+        locateLibs(File(runtimeHome)).forEach { file ->
+            ZLBridge.dlopen(file.absolutePath)
         }
-        
-        // Load critical libraries first
-        tryDlopen("$jliLibDir/libjli.so", "libjli.so", true)
-        tryDlopen("$jvmLibDir/libjvm.so", "libjvm.so", true)
-        
-        // Load essential libraries
-        val essentialLibs = listOf(
-            "$javaLibDir/libverify.so" to "libverify.so",
-            "$javaLibDir/libjava.so" to "libjava.so",
-            "$javaLibDir/libnet.so" to "libnet.so",
-            "$javaLibDir/libnio.so" to "libnio.so"
-        )
-        
-        essentialLibs.forEach { (path, name) ->
-            tryDlopen(path, name, true)
-        }
-        
-        // Load optional libraries (for rendering and fonts)
-        val optionalLibs = listOf(
-            "$javaLibDir/libfreetype.so" to "libfreetype.so",
-            "$javaLibDir/libawt.so" to "libawt.so",
-            "$javaLibDir/libawt_headless.so" to "libawt_headless.so",
-            "$javaLibDir/libfontmanager.so" to "libfontmanager.so"
-        )
-        
-        optionalLibs.forEach { (path, name) ->
-            tryDlopen(path, name, false)
-        }
-        
-        // Load additional libraries from runtime home (non-critical)
-        LoggerBridge.append("▷ Loading additional libs from runtime home...")
-        val additionalLibs = locateLibs(File(runtimeHome))
-        val loadedLibs = mutableSetOf<String>()
-        
-        additionalLibs.forEach { file ->
-            val libName = file.name
-            // Skip already loaded libraries
-            if (!loadedLibs.contains(libName)) {
-                tryDlopen(file.absolutePath, libName, false)
-                loadedLibs.add(libName)
-            }
-        }
-        
-        LoggerBridge.append("▷ Java Runtime library loading completed")
     }
 
     @CallSuper
     protected open fun dlopenEngine() {
-        LoggerBridge.append("▷ Loading sound engine (OpenAL)...")
-        val openalPath = "${PathManager.DIR_NATIVE_LIB}/libopenal.so"
-        val openalFile = File(openalPath)
-        if (!openalFile.exists()) {
-            LoggerBridge.append("▷ ERROR: libopenal.so not found at: $openalPath")
-            Logger.error(TAG, "libopenal.so not found at: $openalPath")
-        } else {
-            val result = ZLBridge.dlopen(openalPath)
-            if (result) {
-                LoggerBridge.append("▷ Successfully loaded libopenal.so")
-            } else {
-                LoggerBridge.append("▷ ERROR: Failed to load libopenal.so")
-                Logger.error(TAG, "Failed to dlopen libopenal.so")
-            }
-        }
+        ZLBridge.dlopen("${PathManager.DIR_NATIVE_LIB}/libopenal.so")
     }
 }
 

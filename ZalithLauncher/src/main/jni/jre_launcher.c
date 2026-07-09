@@ -115,7 +115,7 @@ static void abort_waiter_setup() {
     {
         if (sigaction(tracked_signals[i], &sigactions[i], NULL) != 0)
         {
-            printf("Failed to set signal hander for signal %zu: %s", i, strerror(errno));
+            printf("Failed to set signal hander for signal %i: %s", i, strerror(errno));
         }
     }
 }
@@ -177,27 +177,17 @@ JNIEXPORT jint JNICALL Java_com_oracle_dalvik_VMLauncher_launchJVM(JNIEnv *env, 
     if (argsArray == NULL)
     {
         LOG_TO_E("Args array null, returning");
-        return -999; // Special error code for null args
+        return 0;
     }
 
     int argc = (*env)->GetArrayLength(env, argsArray);
-    if (argc == 0) {
-        LOG_TO_E("Args array empty, returning");
-        return -998; // Special error code for empty args
-    }
-
     char **argv = convert_to_char_array(env, argsArray);
-    if (argv == NULL) {
-        LOG_TO_E("Failed to convert args array");
-        return -997; // Special error code for conversion failure
-    }
-    
     LOG_TO_D("Done processing args");
 
     res = launchJVM(argc, argv);
 
     LOG_TO_D("Going to free args");
-    free_char_array(env, argsArray, (const char **)argv);
+    free_char_array(env, argsArray, argv);
 
     LOG_TO_D("Free done");
     return res;

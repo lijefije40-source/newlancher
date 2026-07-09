@@ -232,7 +232,7 @@ void setNativeWindowSwapInterval(struct ANativeWindow* nativeWindow, int swapInt
         return;
     }
     if(nativeWindowReal->common.version != sizeof(struct ANativeWindow_real)) {
-        __android_log_print(ANDROID_LOG_WARN, "SwapIntervalNoEGL", "ANativeWindow version does not match. Expected %zu, got %i",
+        __android_log_print(ANDROID_LOG_WARN, "SwapIntervalNoEGL", "ANativeWindow version does not match. Expected %i, got %i",
                             sizeof(struct ANativeWindow_real), nativeWindowReal->common.version);
         return;
     }

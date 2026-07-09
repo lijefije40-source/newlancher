@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.IntSize
 import com.movtery.zalithlauncher.BuildConfig
 import com.movtery.zalithlauncher.R
 import com.movtery.zalithlauncher.ZLApplication
-import com.movtery.zalithlauncher.bridge.LoggerBridge
 import com.movtery.zalithlauncher.bridge.LoggerBridge.append
 import com.movtery.zalithlauncher.bridge.LoggerBridge.appendTitle
 import com.movtery.zalithlauncher.bridge.ZLBridge
@@ -36,7 +35,6 @@ import com.movtery.zalithlauncher.game.account.AccountType
 import com.movtery.zalithlauncher.game.account.offline.OfflineYggdrasilServer
 import com.movtery.zalithlauncher.game.addons.modloader.ModLoader
 import com.movtery.zalithlauncher.game.download.game.parseLibraryComponents
-import com.movtery.zalithlauncher.game.driver.TurnipDriverManager
 import com.movtery.zalithlauncher.game.multirt.Runtime
 import com.movtery.zalithlauncher.game.multirt.RuntimesManager
 import com.movtery.zalithlauncher.game.path.GamePathManager
@@ -58,10 +56,6 @@ import com.movtery.zalithlauncher.utils.file.ensureDirectorySilently
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.string.isBiggerTo
 import com.movtery.zalithlauncher.utils.string.isEqualTo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import org.lwjgl.glfw.CallbackBridge
 import java.io.File
@@ -83,85 +77,17 @@ class GameLauncher(
     onExit: (code: Int, isSignal: Boolean) -> Unit,
     openPath: (folder: File) -> Unit
 ) : Launcher(onExit, openPath) {
-    
     private lateinit var gameManifest: GameManifest
-    
-    private val version: Version
-    private val usingAccount: Account
-    private val offlineServer by lazy {
-        Logger.info(TAG, "Lazy initialization of OfflineYggdrasilServer started")
-        LoggerBridge.append("▷ Initializing offline server...")
-        createOfflineServer().also {
-            Logger.info(TAG, "Lazy initialization of OfflineYggdrasilServer completed")
-            LoggerBridge.append("▷ Offline server ready")
-        }
-    }
-    
-    init {
-        try {
-            Logger.info(TAG, "GameLauncher init started")
-            LoggerBridge.append("=".repeat(50))
-            LoggerBridge.append("▷ GameLauncher initialization")
-            Logger.info(TAG, "Version: ${config.version.getVersionName()}, Account: ${config.account.username}")
-            LoggerBridge.append("▷ Version: ${config.version.getVersionName()}")
-            LoggerBridge.append("▷ Account: ${config.account.username}")
-            
-            Logger.info(TAG, "Setting up version...")
-            LoggerBridge.append("▷ Setting up version...")
-            version = config.version
-            Logger.info(TAG, "Version setup completed")
-            LoggerBridge.append("▷ Version ready")
-            
-            Logger.info(TAG, "Setting up account...")
-            LoggerBridge.append("▷ Setting up account...")
-            usingAccount = if (config.version.offlineAccountLogin) {
-                Logger.info(TAG, "Using offline account login")
-                LoggerBridge.append("▷ Using offline account mode")
-                config.account.copy(
-                    accountType = AccountType.LOCAL.tag
-                )
-            } else {
-                Logger.info(TAG, "Using online account: ${config.account.accountType}")
-                LoggerBridge.append("▷ Using online account: ${config.account.accountType}")
-                config.account
-            }
-            Logger.info(TAG, "Account setup completed")
-            LoggerBridge.append("▷ Account ready")
-            
-            Logger.info(TAG, "GameLauncher initialization completed successfully")
-            LoggerBridge.append("▷ GameLauncher ready")
-            LoggerBridge.append("=".repeat(50))
-        } catch (e: Exception) {
-            Logger.error(TAG, "FATAL ERROR in GameLauncher constructor: ${e.message}", e)
-            LoggerBridge.append("▷ FATAL ERROR in initialization: ${e.message}")
-            throw e
-        }
-    }
-    
-    private fun createOfflineServer(): OfflineYggdrasilServer {
-        Logger.info(TAG, "createOfflineServer() called")
-        LoggerBridge.append("▷ Creating OfflineYggdrasilServer...")
-        
-        val startTime = System.currentTimeMillis()
-        return try {
-            Logger.info(TAG, "Attempting to create OfflineYggdrasilServer instance")
-            val server = OfflineYggdrasilServer(0)
-            val elapsedTime = System.currentTimeMillis() - startTime
-            Logger.info(TAG, "OfflineYggdrasilServer created successfully in ${elapsedTime}ms")
-            LoggerBridge.append("▷ OfflineYggdrasilServer created in ${elapsedTime}ms")
-            
-            if (elapsedTime > 3000) {
-                Logger.warning(TAG, "Server creation took ${elapsedTime}ms (slow)")
-                LoggerBridge.append("▷ WARNING: Server creation took ${elapsedTime}ms")
-            }
-            
-            server
-        } catch (e: Exception) {
-            val elapsedTime = System.currentTimeMillis() - startTime
-            Logger.error(TAG, "ERROR creating OfflineYggdrasilServer after ${elapsedTime}ms: ${e.message}", e)
-            LoggerBridge.append("▷ ERROR creating OfflineYggdrasilServer: ${e.message}")
-            throw e
-        }
+    private val offlineServer = OfflineYggdrasilServer(0)
+
+    private val version = config.version
+    private val usingAccount = if (version.offlineAccountLogin) {
+        //使用临时离线账号启动游戏
+        config.account.copy(
+            accountType = AccountType.LOCAL.tag
+        )
+    } else {
+        config.account
     }
 
     override fun exit() {
@@ -169,51 +95,37 @@ class GameLauncher(
     }
 
     override suspend fun launch(screenSize: IntSize): Int {
-        return try {
-            LoggerBridge.append("=".repeat(50))
-            LoggerBridge.append("GameLauncher.launch() called")
-            LoggerBridge.append("▷ Screen size: ${screenSize.width}x${screenSize.height}")
-            LoggerBridge.append("▷ Version: ${version.getVersionName()}")
-            LoggerBridge.append("▷ Account: ${usingAccount.username}")
-            LoggerBridge.append("=".repeat(50))
-
-            if (!Renderers.isCurrentRendererValid()) {
-                LoggerBridge.append("▷ Setting current renderer...")
-                Renderers.setCurrentRenderer(activity, version.getRenderer())
-            }
-
-            val manifest = GSON.fromJson(File(version.getVersionPath(), "${version.getVersionName()}.json").readText(), GameManifest::class.java)
-            val clientJar = manifest.inheritsFrom?.let { inheritsFrom ->
-                //FIXME: 依赖的是一个原版ID的版本，但这个版本可能是用户自行安装的，只是版本名称与ID一致，不保证客户端真的是对应版本
-                VersionsManager.getVersion(inheritsFrom)?.getClientJar()
-            } ?: version.getClientJar()
-
-            gameManifest = VersionInfoParser(version)
-                .setManifest(manifest)
-                .setInheriting()
-                .build()
-
-            CallbackBridge.nativeSetUseInputStackQueue(gameManifest.arguments != null)
-
-            val customArgs = version.getJvmArgs().takeIf { it.isNotBlank() } ?: AllSettings.jvmArgs.getValue()
-            val javaRuntime = getRuntime()
-
-            printLauncherInfo(
-                javaArguments = customArgs.takeIf { it.isNotEmpty() } ?: "NONE",
-                javaRuntime = javaRuntime,
-            )
-
-            launchGame(
-                screenSize = screenSize,
-                clientJar = clientJar,
-                javaRuntime = javaRuntime,
-                customArgs = customArgs,
-            )
-        } catch (e: Exception) {
-            Logger.error(TAG, "Fatal error during game launch", e)
-            LoggerBridge.append("FATAL ERROR during launch: ${e.message}")
-            -994
+        if (!Renderers.isCurrentRendererValid()) {
+            Renderers.setCurrentRenderer(activity, version.getRenderer())
         }
+
+        val manifest = GSON.fromJson(File(version.getVersionPath(), "${version.getVersionName()}.json").readText(), GameManifest::class.java)
+        val clientJar = manifest.inheritsFrom?.let { inheritsFrom ->
+            //FIXME: 依赖的是一个原版ID的版本，但这个版本可能是用户自行安装的，只是版本名称与ID一致，不保证客户端真的是对应版本
+            VersionsManager.getVersion(inheritsFrom)?.getClientJar()
+        } ?: version.getClientJar()
+
+        gameManifest = VersionInfoParser(version)
+            .setManifest(manifest)
+            .setInheriting()
+            .build()
+
+        CallbackBridge.nativeSetUseInputStackQueue(gameManifest.arguments != null)
+
+        val customArgs = version.getJvmArgs().takeIf { it.isNotBlank() } ?: AllSettings.jvmArgs.getValue()
+        val javaRuntime = getRuntime()
+
+        printLauncherInfo(
+            javaArguments = customArgs.takeIf { it.isNotEmpty() } ?: "NONE",
+            javaRuntime = javaRuntime,
+        )
+
+        return launchGame(
+            screenSize = screenSize,
+            clientJar = clientJar,
+            javaRuntime = javaRuntime,
+            customArgs = customArgs,
+        )
     }
 
     override fun MutableMap<String, String>.putJavaArgs() {
@@ -223,27 +135,6 @@ class GameLauncher(
         if (is172 && (versionInfo?.loaderInfo?.loader == ModLoader.FORGE)) {
             Logger.debug(TAG, "Is Forge 1.7.2, use the patched sorting method.")
             put("sort.patch", "true")
-        }
-
-        // Enhanced compatibility for old Minecraft versions (1.0.0+)
-        val mcVersion = versionInfo?.minecraftVersion ?: "0.0"
-        val versionParts = mcVersion.split(".")
-        if (versionParts.isNotEmpty()) {
-            val majorVersion = versionParts[0].toIntOrNull() ?: 0
-            val minorVersion = if (versionParts.size > 1) versionParts[1].toIntOrNull() ?: 0 else 0
-            
-            // For very old versions (1.0-1.5)
-            if (majorVersion == 1 && minorVersion <= 5) {
-                put("minecraft.legacy.mode", "true")
-                put("java.net.preferIPv4Stack", "true")
-                put("legacy.lwjgl.mode", "true")
-            }
-            
-            // For old modded versions (1.2.5-1.7.10)
-            if (majorVersion == 1 && minorVersion >= 2 && minorVersion <= 7) {
-                put("fml.readTimeout", "240") // Longer timeout for old mod loading
-                put("legacy.mod.support", "true")
-            }
         }
 
         //jna
@@ -271,37 +162,7 @@ class GameLauncher(
         val envMap = super.initEnv(screenSize)
 
         DriverPluginManager.setDriverById(version.getDriver())
-        val driverPath = DriverPluginManager.getDriver().path
-        envMap["DRIVER_PATH"] = driverPath
-
-        // Adrenotools: حقن مشغّل Turnip Vulkan لتجاوز قيود النظام (Non-Root)
-        val adrenotoolsLibPath = findAdrenotoolsLib()
-        if (adrenotoolsLibPath != null) {
-            envMap["ADRENOTOOLS_DRIVER_PATH"] = driverPath
-            envMap["ADRENOTOOLS_ENABLE"] = "1"
-            envMap["ADRENOTOOLS_HOOK_VULKAN"] = "1" // تفعيل الاعتراض البرمجي
-            // إجبار واجهة Vulkan على استخدام الملفات المحقونة
-            envMap["VK_ICD_FILENAMES"] = "$driverPath/turnip_icd.json"
-            append("▷ Adrenotools Injection: Enabled for Snapdragon 8 series")
-        }
-
-        // تحسينات Adreno 7xx/8xx لمنع الشاشة الحمراء وتداخل الكتل
-        val renderer = Renderers.getCurrentRenderer()
-        val rendererId = renderer.getRendererId().lowercase()
-        if (rendererId.contains("zink") || rendererId.contains("vulkan")) {
-            // رقعة معالجة الـ Z-buffer والعمق
-            envMap["TU_DEBUG"] = "noconform" 
-            envMap["MESA_VK_WSI_PRESENT_MODE"] = "mailbox"
-            envMap["ZINK_DESCRIPTORS"] = "lazy"
-            
-            // إصلاح تعارض Snapdragon 8 Gen 3 (Adreno 750)
-            if (Build.MODEL.contains("S928") || Build.MODEL.contains("S938") || Build.BOARD.contains("pineapple")) {
-                envMap["MESA_EXTENSION_OVERRIDE"] = "-VK_KHR_pipeline_executable_properties"
-                append("▷ GPU Patch: Applied Adreno 750 (Gen 3) compatibility fixes")
-            }
-        }
-        
-        // ... (بقية الكود الحالي لـ TurnipDriverManager)
+        envMap["DRIVER_PATH"] = DriverPluginManager.getDriver().path
 
         checkAndUsedJSPH(envMap, runtime)
         version.getVersionInfo()?.loaderInfo?.getLoaderEnvKey()?.let { loaderKey ->
@@ -314,83 +175,18 @@ class GameLauncher(
         return envMap
     }
 
-    private fun findAdrenotoolsLib(): String? {
-        val driverPath = DriverPluginManager.getDriver().path
-        val libFile = File(driverPath, "libadrenotools.so")
-        return if (libFile.exists()) driverPath else null
-    }
-
     override fun dlopenEngine() {
         super.dlopenEngine()
-        appendTitle("GPU Driver Injection")
+        appendTitle("DLOPEN Renderer")
 
-        val adrenotoolsPath = findAdrenotoolsLib()?.let { "$it/libadrenotools.so" }
-        if (adrenotoolsPath != null) {
-            append("▷ Injecting Adrenotools Hook...")
-            if (ZLBridge.dlopen(adrenotoolsPath)) {
-                append("▷ Adrenotools Hook: ACTIVE")
-                // تهيئة المكتبة إذا كانت تدعم الـ entry point الخاص بالحقن
-                ZLBridge.dlopen("${DriverPluginManager.getDriver().path}/libvulkan_freedreno.so")
-            }
+        //声音引擎加载后，dlopen渲染器的库
+        RendererPluginManager.selectedRendererPlugin?.let { renderer ->
+            renderer.dlopen.forEach { lib -> ZLBridge.dlopen("${renderer.path}/$lib") }
         }
 
-        val rendererPlugin = RendererPluginManager.selectedRendererPlugin
-        if (rendererPlugin != null) {
-            append("▷ Loading renderer plugin: ${rendererPlugin.displayName}")
-            rendererPlugin.dlopen.forEach { lib ->
-                val libPath = "${rendererPlugin.path}/$lib"
-                append("▷ Loading renderer plugin lib: $libPath")
-                if (!ZLBridge.dlopen(libPath)) {
-                    Logger.error(TAG, "Failed to load renderer plugin library: $libPath")
-                    append("▷ ERROR: Failed to load renderer plugin library: $libPath")
-                }
-            }
-            return
-        }
-
-        val rendererLib = loadGraphicsLibrary()
-        if (rendererLib == null) {
-            Logger.error(TAG, "No renderer library to load")
-            append("▷ ERROR: No renderer library configured")
-            return
-        }
-
-        append("▷ Loading renderer library: $rendererLib")
-        if (!ZLBridge.dlopen(rendererLib)) {
-            val altPath = findInLdLibPath(rendererLib)
-            if (ZLBridge.dlopen(altPath)) {
-                append("▷ Successfully loaded renderer from LD path: $altPath")
-                return
-            }
-            Logger.error(TAG, "Failed to load renderer library: $rendererLib")
-            append("▷ ERROR: Failed to load renderer library!")
-            append("▷ Try changing the renderer in settings > Renderer")
-        } else {
-            append("▷ Renderer library loaded successfully")
-        }
-    }
-
-    private fun tryLoadAdrenotools(): String? {
-        return try {
-            val driverPath = DriverPluginManager.getDriver().path
-            // Adrenotools يبحث في نفس مجلد libadrenotools.so عن ملفات Turnip
-            val turnipFiles = File(driverPath).listFiles { f ->
-                f.name.startsWith("libvulkan") && f.name.endsWith(".so")
-            }
-            if (turnipFiles != null && turnipFiles.isNotEmpty()) {
-                driverPath
-            } else {
-                // لو ملفات Turnip مو في driver path, جرب native lib directory
-                val appDir = File(DriverPluginManager.getDriver().path)
-                if (appDir.exists() && File(appDir, "libadrenotools.so").exists()) {
-                    driverPath
-                } else {
-                    null
-                }
-            }
-        } catch (e: Exception) {
-            Logger.warning(TAG, "Failed to check Adrenotools path", e)
-            null
+        val rendererLib = loadGraphicsLibrary() ?: return
+        if (!ZLBridge.dlopen(rendererLib) && !ZLBridge.dlopen(findInLdLibPath(rendererLib))) {
+            Logger.error(TAG, "Failed to load renderer $rendererLib")
         }
     }
 
@@ -406,87 +202,41 @@ class GameLauncher(
         clientJar: File,
         javaRuntime: String,
         customArgs: String
-    ): Int = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val runtime = RuntimesManager.forceReload(javaRuntime)
+    ): Int {
+        val runtime = RuntimesManager.forceReload(javaRuntime)
 
-            val gameDirPath = version.getGameDir()
+        val gameDirPath = version.getGameDir()
 
-            coroutineScope {
-                // Run pre-launch tasks in parallel
-                val splashJob = launch { disableSplash(gameDirPath) }
-                val dirsJob = launch { ensureGameDirectories(gameDirPath) }
+        disableSplash(gameDirPath)
 
-                // Access offlineServer early to start it in background if needed
-                val serverJob = launch {
-                    Logger.info(TAG, "Ensuring offline server is ready...")
-                    val s = offlineServer
-                    Logger.info(TAG, "Offline server is ready.")
-                }
+        //初始化运行环境
+        this.runtime = runtime
+        val runtimeLibraryPath = getRuntimeLibraryPath()
 
-                // Wait for non-critical pre-launch tasks
-                splashJob.join()
-                dirsJob.join()
-
-                //初始化运行环境
-                this@GameLauncher.runtime = runtime
-                val runtimeLibraryPath = getRuntimeLibraryPath()
-
-                val launchArgs = LaunchArgs(
-                    runtimeLibraryPath = runtimeLibraryPath,
-                    account = usingAccount,
-                    offlineServer = offlineServer,
-                    gameDirPath = gameDirPath,
-                    version = version,
-                    clientJar = clientJar,
-                    gameManifest = gameManifest,
-                    runtime = runtime,
-                    readAssetsFile = { path -> activity.readAssetFile(path) },
-                    getCacioJavaArgs = { isJava8 ->
-                        getCacioJavaArgs(screenSize, isJava8)
-                    }
-                ).getAllArgs()
-
-                serverJob.join() // Now critical
-                tryStartTouchProxy()
-
-                launchJvm(
-                    context = activity,
-                    jvmArgs = launchArgs,
-                    userHome = GamePathManager.getCurrentPath(),
-                    userArgs = customArgs,
-                    screenSize = screenSize
-                )
+        val launchArgs = LaunchArgs(
+            runtimeLibraryPath = runtimeLibraryPath,
+            account = usingAccount,
+            offlineServer = offlineServer,
+            gameDirPath = gameDirPath,
+            version = version,
+            clientJar = clientJar,
+            gameManifest = gameManifest,
+            runtime = runtime,
+            readAssetsFile = { path -> activity.readAssetFile(path) },
+            getCacioJavaArgs = { isJava8 ->
+                getCacioJavaArgs(screenSize, isJava8)
             }
-        } catch (e: Exception) {
-            Logger.error(TAG, "Fatal error during launch game preparation", e)
-            LoggerBridge.append("FATAL ERROR during game preparation: ${e.message}")
-            -994
-        }
-    }
-    
-    /**
-     * Pre-create necessary game directories to avoid delays during launch
-     */
-    private fun ensureGameDirectories(gameDir: File) {
-        runCatching {
-            val dirs = listOf(
-                File(gameDir, "saves"),
-                File(gameDir, "screenshots"),
-                File(gameDir, "resourcepacks"),
-                File(gameDir, "shaderpacks"),
-                File(gameDir, "mods"),
-                File(gameDir, "config"),
-                File(gameDir, "logs")
-            )
-            dirs.forEach { dir ->
-                if (!dir.exists()) {
-                    dir.mkdirs()
-                }
-            }
-        }.onFailure { e ->
-            Logger.warning(TAG, "Failed to pre-create game directories", e)
-        }
+        ).getAllArgs()
+
+        tryStartTouchProxy()
+
+        return launchJvm(
+            context = activity,
+            jvmArgs = launchArgs,
+            userHome = GamePathManager.getCurrentPath(),
+            userArgs = customArgs,
+            screenSize = screenSize
+        )
     }
 
     private fun tryStartTouchProxy() {
@@ -540,13 +290,12 @@ class GameLauncher(
             val loaderInfo = version.getVersionInfo()?.loaderInfo
             //开启了自动选择，根据游戏需求的版本做选择
             val targetJavaVersion = when (loaderInfo?.loader) {
-                ModLoader.BABRIC -> 17
-                ModLoader.FABRIC, ModLoader.LEGACY_FABRIC -> 17
+                ModLoader.BABRIC -> 17 //Babric 推荐使用 17
                 ModLoader.CLEANROOM -> {
                     if (loaderInfo.version.isBiggerTo("0.4.4-alpha")) {
-                        25
+                        25 //0.5.0-alpha 及以上要求使用 25
                     } else {
-                        21
+                        21 //0.4.4-alpha 及以下要求使用 21
                     }
                 }
                 else -> gameManifest.javaVersion?.majorVersion ?: 8
@@ -574,13 +323,14 @@ class GameLauncher(
             if (configDir.ensureDirectorySilently()) {
                 val forgeSplashFile = configDir.child("splash.properties")
                 runCatching {
-                    val props = java.util.Properties()
+                    var forgeSplashContent = "enabled=true"
                     if (forgeSplashFile.exists()) {
-                        forgeSplashFile.inputStream().use { props.load(it) }
+                        forgeSplashContent = forgeSplashFile.readText()
                     }
-                    if (props.getProperty("enabled", "true") == "true") {
-                        props.setProperty("enabled", "false")
-                        forgeSplashFile.outputStream().use { props.store(it, null) }
+                    if (forgeSplashContent.contains("enabled=true")) {
+                        forgeSplashFile.writeText(
+                            forgeSplashContent.replace("enabled=true", "enabled=false")
+                        )
                     }
                 }.onFailure {
                     Logger.warning(TAG, "Could not disable Forge 1.12.2 and below splash screen!", it)
@@ -612,9 +362,6 @@ private fun setRendererEnv(envMap: MutableMap<String, String>) {
         envMap["LIBGL_NOERROR"] = "1"
         envMap["LIBGL_NOINTOVLHACK"] = "1"
         envMap["LIBGL_NORMALIZE"] = "1"
-        // Additional optimizations for weak devices
-        envMap["LIBGL_SILENTSTUB"] = "1"
-        envMap["LIBGL_VSYNC"] = "0" // Disable vsync for better FPS on weak devices
     }
 
     envMap += renderer.getRendererEnv().value
@@ -634,12 +381,6 @@ private fun setRendererEnv(envMap: MutableMap<String, String>) {
         envMap["allow_higher_compat_version"] = "true"
         envMap["allow_glsl_extension_directive_midshader"] = "true"
         envMap["LIB_MESA_NAME"] = loadGraphicsLibrary() ?: "null"
-        
-        // Performance optimizations for Zink/Vulkan
-        envMap["MESA_GLTHREAD"] = "true" // Enable GL threading for better performance
-        envMap["mesa_glthread"] = "true"
-        envMap["MESA_NO_ERROR"] = "1" // Reduce error checking overhead
-        envMap["MESA_DEBUG"] = "silent" // Silent for release, use "verbose" for debugging
     }
 
     if (!envMap.containsKey("LIBGL_ES")) {
@@ -657,13 +398,6 @@ private fun setRendererEnv(envMap: MutableMap<String, String>) {
             "3"
         }
     }
-    
-    // Additional optimizations for all renderers
-    envMap["LIBGL_FPS"] = "0" // Disable FPS counter overhead
-    envMap["GALLIUM_HUD"] = "" // Disable HUD overlay
-
-    // Enable renderer debugging for troubleshooting
-    envMap["LIBGL_DEBUG"] = "verbose"
 }
 
 /**
