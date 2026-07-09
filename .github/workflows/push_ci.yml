@@ -3,7 +3,7 @@ name: Build CI
 on:
   push:
     branches:
-      - '**'
+      - 'main' # سيتم إنشاء Release فقط عند التحديث في الفرع الرئيسي
   workflow_dispatch:
 
 permissions:
@@ -18,11 +18,22 @@ jobs:
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
 
-  Upload-to-Latest-Release:
+  Create-New-Release:
     needs: Build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push'
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Version info
+        id: get_version
+        run: |
+          VERSION=$(grep "launcher_version_name=" ZalithLauncher/gradle.properties | cut -d'=' -f2)
+          RANDOM_ID=$(openssl rand -hex 4)
+          echo "tag=v${VERSION}-${RANDOM_ID}" >> $GITHUB_OUTPUT
+          echo "vname=${VERSION} (ID ${RANDOM_ID})" >> $GITHUB_OUTPUT
+
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -32,19 +43,17 @@ jobs:
         run: |
           mkdir -p ./apks
           find ./artifacts -name "*.apk" -type f -exec cp {} ./apks/ \;
-          echo "Found APKs:"
-          ls -R ./apks/
 
-      - name: Update Latest Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: "Latest Continuous Build"
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          name: "Zalith Launcher ${{ steps.get_version.outputs.vname }}"
           body: |
-            This release is automatically updated on every push to the main branch.
-            Last updated: ${{ github.event.head_commit.timestamp }}
-            Commit: ${{ github.sha }}
+            Automatic build for commit ${{ github.sha }}
+            Timestamp: ${{ github.event.head_commit.timestamp }}
           files: ./apks/*.apk
-          prerelease: true
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
