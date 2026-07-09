@@ -8,14 +8,6 @@ on:
         required: true
         type: string
     secrets:
-      KEYSTORE:
-        required: false
-      KEY_ALIAS:
-        required: false
-      KEY_PASSWORD:
-        required: false
-      STORE_PASSWORD:
-        required: false
       OAUTH_CLIENT_ID:
         required: false
       CURSEFORGE_API_KEY:
@@ -31,10 +23,6 @@ jobs:
       fail-fast: false
 
     env:
-      KEYSTORE: ${{ secrets.KEYSTORE }}
-      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
 
