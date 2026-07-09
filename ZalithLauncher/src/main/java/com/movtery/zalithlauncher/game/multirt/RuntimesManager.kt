@@ -180,8 +180,14 @@ object RuntimesManager {
 
         val localXawtLib = File(PathManager.DIR_NATIVE_LIB, "libawt_xawt.so")
         val targetXawtLib = dest.child(libFolder, "libawt_xawt.so")
-        if (targetXawtLib.exists()) targetXawtLib.delete()
-        FileUtils.copyFile(localXawtLib, targetXawtLib)
+        
+        // Check if source file exists before copying
+        if (localXawtLib.exists()) {
+            if (targetXawtLib.exists()) targetXawtLib.delete()
+            FileUtils.copyFile(localXawtLib, targetXawtLib)
+        } else {
+            Logger.warning(TAG, "libawt_xawt.so not found in native lib directory: ${localXawtLib.absolutePath}")
+        }
     }
 
     @Throws(IOException::class)
@@ -251,6 +257,19 @@ object RuntimesManager {
             val basePath = File(runtimePath)
             val files: Collection<File> = FileUtils.listFiles(basePath, arrayOf("pack"), true)
 
+            val unpack200File = File(nativeLibraryDir, "libunpack200.so")
+            
+            // Check if unpack200 binary exists
+            if (!unpack200File.exists()) {
+                Logger.warning(TAG, "libunpack200.so not found in $nativeLibraryDir. Skipping unpack200 process.")
+                return@withContext
+            }
+
+            // Ensure the file is executable
+            if (!unpack200File.canExecute()) {
+                unpack200File.setExecutable(true)
+            }
+
             val workDir = File(nativeLibraryDir)
             val processBuilder = ProcessBuilder().directory(workDir)
 
@@ -259,12 +278,15 @@ object RuntimesManager {
                 runCatching {
                     val destPath = jarFile.absolutePath.replace(".pack", "")
                     processBuilder.command(
-                        "./libunpack200.so",
+                        unpack200File.absolutePath,
                         "-r",
                         jarFile.absolutePath,
                         destPath
                     ).start().apply {
-                        waitFor()
+                        val exitCode = waitFor()
+                        if (exitCode != 0) {
+                            Logger.warning(TAG, "unpack200 exited with code $exitCode for ${jarFile.name}")
+                        }
                     }
                 }.onFailure { e ->
                     if (e is IOException) {

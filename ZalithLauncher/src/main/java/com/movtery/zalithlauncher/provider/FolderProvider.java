@@ -345,6 +345,7 @@ public class FolderProvider extends DocumentsProvider {
         }
         Bundle out = new Bundle();
         try {
+            @SuppressWarnings("deprecation")
             Uri uri = extras.getParcelable("uri");
             List<String> pathSegments = uri.getPathSegments();
             String documentId = pathSegments.size() >= 4 ? pathSegments.get(3) : pathSegments.get(1);

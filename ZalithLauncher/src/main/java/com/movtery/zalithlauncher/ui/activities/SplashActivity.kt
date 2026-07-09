@@ -255,6 +255,7 @@ class SplashActivity : BaseAppCompatActivity(refreshData = false) {
                     ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                         source.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
                     else
+                        @Suppress("DEPRECATION")
                         source.getParcelableExtra(Intent.EXTRA_STREAM)
             }
             Intent.ACTION_VIEW -> source.data

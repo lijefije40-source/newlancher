@@ -1,0 +1,441 @@
+================ ZalithLauncher Log ================
+▷ Device: pa3q SM-S938U
+▷ Arch: x86_64
+▷ Android Version: 12
+▷ Launcher Version: 2.5.12, build: all
+====================================================
+[04:45:38.693] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-8/bin-x86_64.tar.xz, contains = true
+[04:45:38.694] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-17/bin-x86_64.tar.xz, contains = true
+[04:45:38.695] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-21/bin-x86_64.tar.xz, contains = true
+[04:45:38.696] [UnpackJreTask/INFO] Device requires environment: runtimes/jre-25/bin-x86_64.tar.xz, contains = true
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/jna-arm64.zip
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jna/version
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm64.tar.xz
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-arm.tar.xz
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86.tar.xz
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/bin-x86_64.tar.xz
+[04:45:38.703] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/universal.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-17/version
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-arm64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/bin-x86_64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/universal.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-21/version
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-arm64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/bin-x86_64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/universal.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-25/version
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-arm64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/bin-x86_64.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/universal.tar.xz
+[04:45:38.704] [SplashActivity/INFO] The launcher contains the runtime environment: runtimes/jre-8/version
+[04:45:38.705] [UnpackSingleTask/INFO] auth_libs: Pack was installed manually, or does not exist...
+[04:45:38.705] [UnpackSingleTask/INFO] caciocavallo: Pack was installed manually, or does not exist...
+[04:45:38.705] [UnpackSingleTask/INFO] caciocavallo17: Pack was installed manually, or does not exist...
+[04:45:38.706] [UnpackSingleTask/INFO] jna: Pack was installed manually, or does not exist...
+[04:45:38.706] [UnpackSingleTask/INFO] launcher: Pack was installed manually, or does not exist...
+[04:45:38.706] [UnpackSingleTask/INFO] lwjgl3: Pack was installed manually, or does not exist...
+[04:45:42.356] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.357] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.357] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.358] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.358] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.364] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.364] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.365] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.365] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.366] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.367] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.368] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.368] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.370] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.370] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.371] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.371] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.375] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.376] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.377] [RuntimesManager/ERROR] Failed to unpack the runtime!
+java.io.IOException: Cannot run program "./libunpack200.so" (in directory "/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64"): error=2, No such file or directory
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1050)
+	at yb.r(Unknown Source:392)
+	at ba0.m(Unknown Source:7)
+	at qc2.run(Unknown Source:113)
+	at fo1.run(Unknown Source:117)
+Caused by: java.io.IOException: error=2, No such file or directory
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:133)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:156)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1029)
+	... 4 more
+[04:45:42.379] [UnpackJre/ERROR] Internal JRE unpack failed
+java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at m83.a(Unknown Source:47)
+	at m83.d(Unknown Source:2)
+	at s80.r(Unknown Source:505)
+	at s80.K(Unknown Source:88)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at c50.r(Unknown Source:83)
+	at c50.K(Unknown Source:17)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at qw9.m(Unknown Source:188)
+	at pw9.r(Unknown Source:11)
+	at ba0.m(Unknown Source:7)
+	at ov9.F(Unknown Source:26)
+	at u1.m(Unknown Source:22)
+	at ba0.m(Unknown Source:32)
+	at qc2.run(Unknown Source:113)
+	at kl3.run(Unknown Source:33)
+	at hb9.run(Unknown Source:2)
+	at fo1.run(Unknown Source:87)
+[04:45:42.828] [UnpackJre/ERROR] Internal JRE unpack failed
+tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+Caused by: ix8: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at ad8.r(Unknown Source:1335)
+	at ba0.m(Unknown Source:7)
+	at ov9.F(Unknown Source:26)
+	at u1.m(Unknown Source:22)
+	at ba0.m(Unknown Source:32)
+	at qc2.run(Unknown Source:113)
+	at kl3.run(Unknown Source:33)
+	at hb9.run(Unknown Source:2)
+	at fo1.run(Unknown Source:87)
+Caused by: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at m83.a(Unknown Source:47)
+	at m83.d(Unknown Source:2)
+	at s80.r(Unknown Source:505)
+	at s80.K(Unknown Source:88)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at c50.r(Unknown Source:83)
+	at c50.K(Unknown Source:17)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at qw9.m(Unknown Source:188)
+	at pw9.r(Unknown Source:11)
+	... 8 more
+[04:45:42.995] [UnpackJre/ERROR] Internal JRE unpack failed
+tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+Caused by: ix8: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at ad8.r(Unknown Source:1335)
+	at ba0.m(Unknown Source:7)
+	at ov9.F(Unknown Source:26)
+	at u1.m(Unknown Source:22)
+	at ba0.m(Unknown Source:32)
+	at qc2.run(Unknown Source:113)
+	at kl3.run(Unknown Source:33)
+	at hb9.run(Unknown Source:2)
+	at fo1.run(Unknown Source:87)
+Caused by: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at m83.a(Unknown Source:47)
+	at m83.d(Unknown Source:2)
+	at s80.r(Unknown Source:505)
+	at s80.K(Unknown Source:88)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at c50.r(Unknown Source:83)
+	at c50.K(Unknown Source:17)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at qw9.m(Unknown Source:188)
+	at pw9.r(Unknown Source:11)
+	... 8 more
+[04:45:44.601] [UnpackJre/ERROR] Internal JRE unpack failed
+tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+Caused by: ix8: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at ad8.r(Unknown Source:1335)
+	at ba0.m(Unknown Source:7)
+	at ov9.F(Unknown Source:26)
+	at u1.m(Unknown Source:22)
+	at ba0.m(Unknown Source:32)
+	at qc2.run(Unknown Source:113)
+	at kl3.run(Unknown Source:33)
+	at hb9.run(Unknown Source:2)
+	at fo1.run(Unknown Source:87)
+	Suppressed: ix8: tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+		at ad8.r(Unknown Source:1335)
+		at ba0.m(Unknown Source:7)
+		... 4 more
+	Caused by: tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+	[CIRCULAR REFERENCE:ix8: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist]
+	Suppressed: ix8: tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+		at ad8.r(Unknown Source:1335)
+		at ba0.m(Unknown Source:7)
+		... 4 more
+	Caused by: tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+	[CIRCULAR REFERENCE:ix8: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist]
+	Suppressed: ix8: tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa
+		at ad8.r(Unknown Source:1335)
+		at ba0.m(Unknown Source:7)
+		... 4 more
+	[CIRCULAR REFERENCE:tl4: Parent job is Cancelling; job=sy8{Cancelling}@26ef4fa]
+	Suppressed: ta2: [sy8{Cancelling}@26ef4fa, Dispatchers.Main.immediate]
+Caused by: java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at m83.a(Unknown Source:47)
+	at m83.d(Unknown Source:2)
+	at s80.r(Unknown Source:505)
+	at s80.K(Unknown Source:88)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at c50.r(Unknown Source:83)
+	at c50.K(Unknown Source:17)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at qw9.m(Unknown Source:188)
+	at pw9.r(Unknown Source:11)
+	... 8 more
+[04:46:04.664] [Startup/ERROR] An exception occurred
+java.io.FileNotFoundException: Source '/data/app/~~JjM38ICiUIEK0SgfccvNyg==/com.movtery.zalithlauncher.v2-q5FgpfR6Jm3zaUoJSzjfFA==/lib/x86_64/libawt_xawt.so' does not exist
+	at m83.a(Unknown Source:47)
+	at m83.d(Unknown Source:2)
+	at s80.r(Unknown Source:505)
+	at s80.K(Unknown Source:88)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at c50.r(Unknown Source:83)
+	at c50.K(Unknown Source:17)
+	at t83.u0(Unknown Source:18)
+	at os9.m0(Unknown Source:79)
+	at qw9.m(Unknown Source:188)
+	at pw9.r(Unknown Source:11)
+	at ba0.m(Unknown Source:7)
+	at ov9.F(Unknown Source:26)
+	at u1.m(Unknown Source:22)
+	at ba0.m(Unknown Source:32)
+	at qc2.run(Unknown Source:113)
+	at kl3.run(Unknown Source:33)
+	at hb9.run(Unknown Source:2)
+	at fo1.run(Unknown Source:87)
