@@ -80,25 +80,31 @@ abstract class Launcher(
         useLocalLanguage: Boolean = true
     ): Int {
         return try {
-            LoggerBridge.append("▷ Initializing launcher...")
+            LoggerBridge.append("▷ Initializing JVM launcher...")
+            Logger.info(TAG, "Starting JVM initialization")
             ZLNativeInvoker.staticLauncher = this
 
             LoggerBridge.append("▷ Setting library path...")
+            Logger.info(TAG, "Setting up library paths")
             val libPath = getRuntimeLibraryPath()
-            LoggerBridge.append("▷ Library path: $libPath")
+            LoggerBridge.append("▷ Library path configured")
             ZLBridge.setLdLibraryPath(libPath)
 
             LoggerBridge.appendTitle("Env Map")
             LoggerBridge.append("▷ Setting environment variables...")
+            Logger.info(TAG, "Setting up environment")
             setEnv(screenSize)
 
             LoggerBridge.appendTitle("DLOPEN Java Runtime")
+            Logger.info(TAG, "Loading Java runtime libraries")
             dlopenJavaRuntime()
 
             LoggerBridge.appendTitle("DLOPEN Engine")
+            Logger.info(TAG, "Loading engine libraries")
             dlopenEngine()
 
             LoggerBridge.append("▷ Proceeding to JVM launch...")
+            Logger.info(TAG, "All preparations complete, launching JVM")
             launchJavaVM(
                 context = context,
                 jvmArgs = jvmArgs,
@@ -124,6 +130,7 @@ abstract class Launcher(
         screenSize: IntSize,
         useLocalLanguage: Boolean
     ): Int {
+        Logger.info(TAG, "Preparing JVM arguments...")
         LoggerBridge.append("Preparing JVM arguments...")
         val args = getJavaArgs(
             userHome = userHome,
@@ -132,6 +139,7 @@ abstract class Launcher(
             useLocalLanguage = useLocalLanguage
         ).toMutableList()
         
+        Logger.info(TAG, "Processing final user arguments...")
         LoggerBridge.append("Processing final user args...")
         progressFinalUserArgs(args)
 
@@ -151,19 +159,23 @@ abstract class Launcher(
             LoggerBridge.append("▷ $arg")
         }
 
+        Logger.info(TAG, "Setting up exit handlers...")
         LoggerBridge.append("Setting up exit handlers...")
         ZLBridge.setupExitMethod(context.applicationContext)
         ZLBridge.initializeGameExitHook()
         
         val chdirPath = chdir()
+        Logger.info(TAG, "Changing directory to: $chdirPath")
         LoggerBridge.append("Changing directory to: $chdirPath")
         ZLBridge.chdir(chdirPath)
 
         LoggerBridge.append("=".repeat(50))
         LoggerBridge.append("Starting JVM launch...")
+        Logger.info(TAG, "Launching JVM with ${args.size} arguments")
         LoggerBridge.append("=".repeat(50))
         
         val exitCode = try {
+            Logger.info(TAG, "Calling VMLauncher.launchJVM...")
             LoggerBridge.append("Calling VMLauncher.launchJVM with ${args.size} arguments")
             VMLauncher.launchJVM(args.toTypedArray())
         } catch (e: UnsatisfiedLinkError) {
@@ -178,18 +190,43 @@ abstract class Launcher(
         
         LoggerBridge.append("=".repeat(50))
         LoggerBridge.append("Java Exit code: $exitCode")
+        Logger.info(TAG, "Java process exited with code: $exitCode")
         LoggerBridge.append("=".repeat(50))
         
         // Log specific error codes
         when (exitCode) {
-            -999 -> LoggerBridge.append("ERROR: Args array was null")
-            -998 -> LoggerBridge.append("ERROR: Args array was empty")
-            -997 -> LoggerBridge.append("ERROR: Failed to convert args array")
-            -996 -> LoggerBridge.append("ERROR: Native library loading failed")
-            -995 -> LoggerBridge.append("ERROR: JVM launch exception")
-            -1 -> LoggerBridge.append("ERROR: JLI library loading failed")
-            in 1..255 -> LoggerBridge.append("WARNING: Java process exited with non-zero code")
-            0 -> LoggerBridge.append("SUCCESS: Java process exited normally")
+            -999 -> {
+                LoggerBridge.append("ERROR: Args array was null")
+                Logger.error(TAG, "Args array was null")
+            }
+            -998 -> {
+                LoggerBridge.append("ERROR: Args array was empty")
+                Logger.error(TAG, "Args array was empty")
+            }
+            -997 -> {
+                LoggerBridge.append("ERROR: Failed to convert args array")
+                Logger.error(TAG, "Failed to convert args array")
+            }
+            -996 -> {
+                LoggerBridge.append("ERROR: Native library loading failed")
+                Logger.error(TAG, "Native library loading failed")
+            }
+            -995 -> {
+                LoggerBridge.append("ERROR: JVM launch exception")
+                Logger.error(TAG, "JVM launch exception")
+            }
+            -1 -> {
+                LoggerBridge.append("ERROR: JLI library loading failed")
+                Logger.error(TAG, "JLI library loading failed")
+            }
+            in 1..255 -> {
+                LoggerBridge.append("WARNING: Java process exited with non-zero code")
+                Logger.warning(TAG, "Java process exited with non-zero code: $exitCode")
+            }
+            0 -> {
+                LoggerBridge.append("SUCCESS: Java process exited normally")
+                Logger.info(TAG, "Java process exited normally")
+            }
         }
         
         return exitCode

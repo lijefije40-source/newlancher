@@ -85,76 +85,77 @@ class GameLauncher(
     private val version: Version
     private val usingAccount: Account
     private val offlineServer by lazy {
-        Logger.error(TAG, "Lazy initialization of OfflineYggdrasilServer started")
+        Logger.info(TAG, "Lazy initialization of OfflineYggdrasilServer started")
+        LoggerBridge.append("▷ Initializing offline server...")
         createOfflineServer().also {
-            Logger.error(TAG, "Lazy initialization of OfflineYggdrasilServer completed")
+            Logger.info(TAG, "Lazy initialization of OfflineYggdrasilServer completed")
+            LoggerBridge.append("▷ Offline server ready")
         }
     }
     
     init {
         try {
-            Logger.error(TAG, "GameLauncher init started")
+            Logger.info(TAG, "GameLauncher init started")
             LoggerBridge.append("=".repeat(50))
-            LoggerBridge.append("▷ GameLauncher init started")
-            Logger.error(TAG, "Version: ${config.version.getVersionName()}, Account: ${config.account.username}")
+            LoggerBridge.append("▷ GameLauncher initialization")
+            Logger.info(TAG, "Version: ${config.version.getVersionName()}, Account: ${config.account.username}")
             LoggerBridge.append("▷ Version: ${config.version.getVersionName()}")
             LoggerBridge.append("▷ Account: ${config.account.username}")
             
-            Logger.error(TAG, "Step 1: Setting version...")
-            LoggerBridge.append("▷ Step 1: Setting version...")
+            Logger.info(TAG, "Setting up version...")
+            LoggerBridge.append("▷ Setting up version...")
             version = config.version
-            Logger.error(TAG, "Step 1 completed")
-            LoggerBridge.append("▷ Step 1 completed")
+            Logger.info(TAG, "Version setup completed")
+            LoggerBridge.append("▷ Version ready")
             
-            Logger.error(TAG, "Step 2: Setting account...")
-            LoggerBridge.append("▷ Step 2: Setting account...")
+            Logger.info(TAG, "Setting up account...")
+            LoggerBridge.append("▷ Setting up account...")
             usingAccount = if (config.version.offlineAccountLogin) {
-                //使用临时离线账号启动游戏
-                Logger.error(TAG, "Using offline account login")
-                LoggerBridge.append("▷ Using offline account login")
+                Logger.info(TAG, "Using offline account login")
+                LoggerBridge.append("▷ Using offline account mode")
                 config.account.copy(
                     accountType = AccountType.LOCAL.tag
                 )
             } else {
-                Logger.error(TAG, "Using online account: ${config.account.accountType}")
+                Logger.info(TAG, "Using online account: ${config.account.accountType}")
                 LoggerBridge.append("▷ Using online account: ${config.account.accountType}")
                 config.account
             }
-            Logger.error(TAG, "Step 2 completed")
-            LoggerBridge.append("▷ Step 2 completed")
+            Logger.info(TAG, "Account setup completed")
+            LoggerBridge.append("▷ Account ready")
             
-            Logger.error(TAG, "GameLauncher init completed")
-            LoggerBridge.append("▷ GameLauncher init completed")
+            Logger.info(TAG, "GameLauncher initialization completed successfully")
+            LoggerBridge.append("▷ GameLauncher ready")
             LoggerBridge.append("=".repeat(50))
         } catch (e: Exception) {
             Logger.error(TAG, "FATAL ERROR in GameLauncher constructor: ${e.message}", e)
+            LoggerBridge.append("▷ FATAL ERROR in initialization: ${e.message}")
             throw e
         }
     }
     
     private fun createOfflineServer(): OfflineYggdrasilServer {
-        Logger.error(TAG, "createOfflineServer() called")
+        Logger.info(TAG, "createOfflineServer() called")
         LoggerBridge.append("▷ Creating OfflineYggdrasilServer...")
         
-        // Try to create with timeout to prevent hanging
         val startTime = System.currentTimeMillis()
         return try {
-            Logger.error(TAG, "Attempting to create OfflineYggdrasilServer instance")
+            Logger.info(TAG, "Attempting to create OfflineYggdrasilServer instance")
             val server = OfflineYggdrasilServer(0)
             val elapsedTime = System.currentTimeMillis() - startTime
-            Logger.error(TAG, "OfflineYggdrasilServer created successfully in ${elapsedTime}ms")
-            LoggerBridge.append("▷ OfflineYggdrasilServer created successfully in ${elapsedTime}ms")
+            Logger.info(TAG, "OfflineYggdrasilServer created successfully in ${elapsedTime}ms")
+            LoggerBridge.append("▷ OfflineYggdrasilServer created in ${elapsedTime}ms")
             
-            if (elapsedTime > 5000) {
-                Logger.error(TAG, "WARNING: Server creation took ${elapsedTime}ms (very slow!)")
-                LoggerBridge.append("▷ WARNING: Server creation took ${elapsedTime}ms (very slow!)")
+            if (elapsedTime > 3000) {
+                Logger.warning(TAG, "Server creation took ${elapsedTime}ms (slow)")
+                LoggerBridge.append("▷ WARNING: Server creation took ${elapsedTime}ms")
             }
             
             server
         } catch (e: Exception) {
             val elapsedTime = System.currentTimeMillis() - startTime
             Logger.error(TAG, "ERROR creating OfflineYggdrasilServer after ${elapsedTime}ms: ${e.message}", e)
-            LoggerBridge.append("▷ ERROR creating OfflineYggdrasilServer after ${elapsedTime}ms: ${e.message}")
+            LoggerBridge.append("▷ ERROR creating OfflineYggdrasilServer: ${e.message}")
             throw e
         }
     }

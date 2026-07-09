@@ -127,13 +127,27 @@ object LaunchGame {
             onCompletion = { task ->
                 task.updateProgress(-1f, null)
                 
+                Logger.info(TAG, "File verification completed, starting pre-launch preparation...")
+                
                 // تشخيص المشاكل قبل التشغيل
                 runDiagnostics(context, version, task, submitError)
                 
+                Logger.info(TAG, "Checking TouchController proxy...")
                 checkEnableTouchProxy(version)
+                
+                Logger.info(TAG, "Checking Vulkan capabilities...")
                 task.updateMessage(R.string.game_vulkan_check_title)
                 checkVulkanCapabilities(version, waitForVulkanChecker)
 
+                Logger.info(TAG, "All pre-launch checks completed, launching game...")
+                
+                // إضافة تأخير صغير للتأكد من اكتمال كل العمليات
+                try {
+                    Thread.sleep(500)
+                } catch (e: InterruptedException) {
+                    Logger.warning(TAG, "Pre-launch delay interrupted", e)
+                }
+                
                 runGame(context, version, account)
                 exitActivity()
             },
