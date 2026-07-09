@@ -345,7 +345,7 @@ class GameLauncher(
         append("▷ Loading renderer library: $rendererLib")
         if (!ZLBridge.dlopen(rendererLib)) {
             val altPath = findInLdLibPath(rendererLib)
-            if (altPath != null && ZLBridge.dlopen(altPath)) {
+            if (ZLBridge.dlopen(altPath)) {
                 append("▷ Successfully loaded renderer from LD path: $altPath")
                 return
             }
