@@ -24,19 +24,33 @@ val launcherVersionCode = (project.findProperty("launcher_version_code") as? Str
 val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: error("The \"launcher_version_name\" property is not set in gradle.properties.")
 
 val defaultOAuthClientID = project.findProperty("oauth_client_id") as? String
+val defaultStorePassword = project.findProperty("default_store_password") as? String ?: "zalithpassword"
+val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: "zalithpassword"
 val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? String
 
 val projectArch: String = System.getProperty("arch", "all")
 
 fun getKeyFromLocal(envKey: String, fileName: String? = null, default: String? = null): String {
-    val key = System.getenv(envKey)?.trim()
-    return key ?: fileName?.let {
+    // 1. Check Gradle Properties (usually from command line -P)
+    val propertyKey = envKey.lowercase()
+    val propertyValue = project.findProperty(propertyKey) as? String
+    if (!propertyValue.isNullOrBlank()) return propertyValue.trim()
+
+    // 2. Check Environment Variables (CI Secrets)
+    val envValue = System.getenv(envKey)
+    if (!envValue.isNullOrBlank()) return envValue.trim()
+
+    // 3. Check Local File
+    if (fileName != null) {
         val file = File(rootDir, fileName)
-        if (file.canRead() && file.isFile) file.readText().trim() else null
-    } ?: default ?: run {
-        logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
-        ""
+        if (file.canRead() && file.isFile) return file.readText().trim()
     }
+
+    // 4. Fallback to default
+    if (default != null) return default
+
+    logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
+    return ""
 }
 
 android {
@@ -44,11 +58,23 @@ android {
     compileSdk = 37
 
     signingConfigs {
-        create("release") {
-            storeFile = file("mykey.jks")
-            storePassword = "zalithpassword"
-            keyAlias = "movtery_zalith"
-            keyPassword = "zalithpassword"
+        val keystorePath = getKeyFromLocal("KEYSTORE_PATH", null, "zalith_launcher.jks")
+        val keystoreFile = file(keystorePath)
+
+        create("releaseBuild") {
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt", defaultStorePassword)
+                keyAlias = getKeyFromLocal("KEY_ALIAS", null, "movtery_zalith")
+                keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt", defaultKeyPassword)
+            } else {
+                logger.warn("BUILD: Keystore file not found at ${keystoreFile.absolutePath}. Release build will use default signing.")
+                // Fallback to something safe or default
+                storeFile = file("mykey.jks")
+                storePassword = "zalithpassword"
+                keyAlias = "movtery_zalith"
+                keyPassword = "zalithpassword"
+            }
         }
     }
 
@@ -66,7 +92,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("releaseBuild")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -76,7 +102,7 @@ android {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("releaseBuild")
         }
     }
 
