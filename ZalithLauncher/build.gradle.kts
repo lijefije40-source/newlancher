@@ -47,21 +47,9 @@ android {
 
     signingConfigs {
         create("releaseBuild") {
-            val keystoreBase64 = System.getenv("KEYSTORE")
-            if (keystoreBase64 != null && keystoreBase64.isNotEmpty()) {
-                // استخدام keystore من GitHub Secrets
-                val keystoreFile = File.createTempFile("keystore", ".jks")
-                keystoreFile.deleteOnExit()
-                val decoder = Base64.getDecoder()
-                keystoreFile.writeBytes(decoder.decode(keystoreBase64))
-                storeFile = keystoreFile
-                keyAlias = System.getenv("KEY_ALIAS") ?: "movtery_zalith"
-            } else {
-                // استخدام keystore محلي (للبناء المحلي)
-                storeFile = file("zalith_launcher.jks")
-                keyAlias = "movtery_zalith"
-            }
+            storeFile = file("zalith_launcher.jks")
             storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt")
+            keyAlias = "movtery_zalith"
             keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
         }
         create("debugBuild") {
