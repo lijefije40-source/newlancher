@@ -47,11 +47,12 @@ android {
     signingConfigs {
         create("releaseBuild") {
             val keystoreBase64 = System.getenv("KEYSTORE")
-            if (keystoreBase64 != null) {
+            if (keystoreBase64 != null && keystoreBase64.isNotEmpty()) {
                 // استخدام keystore من GitHub Secrets
                 val keystoreFile = File.createTempFile("keystore", ".jks")
                 keystoreFile.deleteOnExit()
-                keystoreFile.writeBytes(java.util.Base64.getDecoder().decode(keystoreBase64))
+                val decoder = java.util.Base64.getDecoder()
+                keystoreFile.writeBytes(decoder.decode(keystoreBase64))
                 storeFile = keystoreFile
                 keyAlias = System.getenv("KEY_ALIAS") ?: "movtery_zalith"
             } else {
