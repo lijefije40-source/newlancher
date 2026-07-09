@@ -2,7 +2,6 @@ import com.android.build.api.variant.FilterConfiguration.FilterType.ABI
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.tasks.MergeSourceSetFolders
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Base64
 
 plugins {
     alias(libs.plugins.android.application)
@@ -133,6 +132,11 @@ android {
             useLegacyPackaging = true
             pickFirsts += listOf("**/libbytehook.so")
         }
+    }
+
+    // Fix for: java.io.FileNotFoundException ... libawt_xawt.so does not exist
+    defaultConfig {
+        manifestPlaceholders["extractNativeLibs"] = "true"
     }
 
     compileOptions {
