@@ -27,7 +27,6 @@ import com.movtery.zalithlauncher.game.account.auth_server.data.AuthServer
 import com.movtery.zalithlauncher.game.account.auth_server.data.AuthServerDao
 import com.movtery.zalithlauncher.path.PathManager
 import com.movtery.zalithlauncher.setting.AllSettings
-import com.movtery.zalithlauncher.utils.isInGreaterChina
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.network.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +36,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.apache.commons.io.FileUtils
-import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 
 private const val TAG = "AccountManager"
@@ -214,15 +212,15 @@ object AccountsManager {
         val currentAccount = getCurrentAccount()
         val isOffline = checkLimit()
         _currentAccountFlow.update {
-            //若处于非正版状态，不允许使用账号
-            if (isOffline) null else currentAccount
+            //允许使用所有类型的账号，包括离线账号
+            currentAccount
         }
         _isOffline.update { isOffline }
     }
 
     private fun checkLimit(): Boolean {
-        val circumventLimit = File(PathManager.DIR_FILES_EXTERNAL, "circumventLimit")
-        return !circumventLimit.exists() && !isInGreaterChina() && !hasMicrosoftAccount()
+        // 始终返回 false，移除地区限制，允许所有用户使用离线账号
+        return false
     }
 
     /**
