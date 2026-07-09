@@ -26,6 +26,7 @@ import com.movtery.zalithlauncher.game.renderer.renderers.LTWRenderer
 import com.movtery.zalithlauncher.game.renderer.renderers.NGGL4ESRenderer
 import com.movtery.zalithlauncher.game.renderer.renderers.PanfrostRenderer
 import com.movtery.zalithlauncher.game.renderer.renderers.VirGLRenderer
+import com.movtery.zalithlauncher.game.renderer.renderers.VulkanDirectRenderer
 import com.movtery.zalithlauncher.game.renderer.renderers.VulkanZinkRenderer
 import com.movtery.zalithlauncher.utils.device.Architecture
 import com.movtery.zalithlauncher.utils.device.checkVulkanSupport
@@ -56,6 +57,7 @@ object Renderers {
 
         addRenderers(
             VulkanZinkRenderer,
+            VulkanDirectRenderer,
             LTWRenderer,
             ANGLERenderer,
             NGGL4ESRenderer,

@@ -18,7 +18,12 @@
 
 package com.movtery.zalithlauncher.game.renderer.renderers
 
+import android.content.Context
 import com.movtery.zalithlauncher.game.renderer.RendererInterface
+import com.movtery.zalithlauncher.utils.device.SnapdragonDetector
+import com.movtery.zalithlauncher.utils.logging.Logger
+
+private const val TAG = "VulkanZinkRenderer"
 
 object VulkanZinkRenderer : RendererInterface {
     override fun getRendererId(): String = "vulkan_zink"
@@ -27,18 +32,41 @@ object VulkanZinkRenderer : RendererInterface {
 
     override fun getRendererName(): String = "Vulkan Zink"
     
-    override fun getRendererSummary(): String = "OpenGL to Vulkan translation with Mesa Turnip support"
+    override fun getRendererSummary(): String = "OpenGL to Vulkan translation with Mesa Turnip support for Snapdragon 8"
 
     override fun getRendererEnv(): Lazy<Map<String, String>> = lazy {
-        mapOf(
-            "MESA_GL_VERSION_OVERRIDE" to "4.6",
-            "MESA_GLSL_VERSION_OVERRIDE" to "460",
-            "GALLIUM_DRIVER" to "zink",
-            "ZINK_DESCRIPTORS" to "lazy",
-            // تحسينات Snapdragon 8
-            "mesa_glthread" to "true",
-            "MESA_LOADER_DRIVER_OVERRIDE" to "zink"
-        )
+        buildMap {
+            // Mesa Zink core settings
+            put("MESA_GL_VERSION_OVERRIDE", "4.6")
+            put("MESA_GLSL_VERSION_OVERRIDE", "460")
+            put("GALLIUM_DRIVER", "zink")
+            put("MESA_LOADER_DRIVER_OVERRIDE", "zink")
+            
+            // Zink optimizations for Snapdragon 8
+            put("ZINK_DESCRIPTORS", "lazy")
+            put("ZINK_DEBUG", "compact")
+            put("mesa_glthread", "true")
+            put("MESA_GLTHREAD_DRIVER", "true")
+            
+            // Vulkan layer optimizations
+            put("VK_INSTANCE_LAYERS", "")
+            put("DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1", "1")
+            
+            // Turnip-specific optimizations for Adreno 7xx/8xx
+            put("TU_DEBUG", "noconform,syncdraw")
+            put("MESA_VK_WSI_PRESENT_MODE", "mailbox")
+            
+            // Performance tweaks
+            put("MESA_SHADER_CACHE_DISABLE", "false")
+            put("MESA_SHADER_CACHE_MAX_SIZE", "1024M")
+            put("vblank_mode", "0")
+            
+            // Adreno-specific settings
+            put("MESA_EXTENSION_OVERRIDE", "GL_EXT_texture_filter_anisotropic")
+            put("force_glsl_extensions_warn", "false")
+            
+            Logger.info(TAG, "Vulkan Zink environment configured for Snapdragon 8")
+        }
     }
 
     override fun getDlopenLibrary(): Lazy<List<String>> = lazy { emptyList() }

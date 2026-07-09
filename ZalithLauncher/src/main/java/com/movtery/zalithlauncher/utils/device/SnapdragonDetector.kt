@@ -107,10 +107,10 @@ object SnapdragonDetector {
         val lowerHardware = hardware.lowercase()
         
         return when {
-            // كشف Adreno 8xx (Snapdragon 8 Elite)
+            // كشف Adreno 8xx (Snapdragon 8 Elite / 8 Gen 4)
             lowerRenderer.contains("adreno") && (
                 lowerRenderer.contains("830") || 
-                lowerRenderer.contains("8") && lowerHardware.contains("elite")
+                lowerRenderer.contains("8") && (lowerHardware.contains("elite") || lowerHardware.contains("sun"))
             ) -> AdrenoGeneration.ADRENO_8XX
             
             // كشف Adreno 7xx (Snapdragon 8 Gen 1/2/3)
@@ -118,7 +118,10 @@ object SnapdragonDetector {
                 lowerRenderer.contains("730") || 
                 lowerRenderer.contains("740") || 
                 lowerRenderer.contains("750") ||
-                lowerRenderer.contains("7")
+                lowerRenderer.contains("7") ||
+                lowerHardware.contains("pineapple") || // SD 8 Gen 3
+                lowerHardware.contains("kalama") || // SD 8 Gen 2
+                lowerHardware.contains("taro") // SD 8 Gen 1
             ) -> AdrenoGeneration.ADRENO_7XX
             
             // كشف Adreno 6xx
@@ -126,7 +129,8 @@ object SnapdragonDetector {
                 lowerRenderer.contains("6") ||
                 lowerRenderer.contains("660") ||
                 lowerRenderer.contains("650") ||
-                lowerRenderer.contains("640")
+                lowerRenderer.contains("640") ||
+                lowerRenderer.contains("630")
             ) -> AdrenoGeneration.ADRENO_6XX
             
             // كشف Mali
@@ -138,7 +142,10 @@ object SnapdragonDetector {
             // كشف Nvidia
             lowerRenderer.contains("nvidia") || lowerRenderer.contains("tegra") -> AdrenoGeneration.NVIDIA
             
-            else -> AdrenoGeneration.UNKNOWN
+            else -> {
+                Logger.warning(TAG, "Unknown GPU: renderer=$renderer, hardware=$hardware")
+                AdrenoGeneration.UNKNOWN
+            }
         }
     }
     

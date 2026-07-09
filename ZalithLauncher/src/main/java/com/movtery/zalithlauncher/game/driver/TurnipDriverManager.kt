@@ -220,17 +220,62 @@ object TurnipDriverManager {
             return env
         }
         
+        // إنشاء ملف ICD إذا لم يكن موجوداً
+        createVulkanICD(context, driver)
+        
         // إعداد متغيرات البيئة للحقن
         val driversDir = getTurnipDirectory(context)
-        env["TURNIP_DRIVER_PATH"] = driver.filePath.absolutePath
+        
+        // Vulkan ICD configuration
         env["VULKAN_ICD_FILENAMES"] = "${driversDir.absolutePath}/turnip_icd.json"
         env["VK_ICD_FILENAMES"] = "${driversDir.absolutePath}/turnip_icd.json"
+        env["VK_DRIVER_FILES"] = "${driversDir.absolutePath}/turnip_icd.json"
+        
+        // Turnip driver path
+        env["TURNIP_DRIVER_PATH"] = driver.filePath.absolutePath
+        
+        // Disable conflicting layers
         env["DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1"] = "1"
+        env["VK_INSTANCE_LAYERS"] = ""
+        env["VK_DEVICE_LAYERS"] = ""
         
-        // تفعيل libadrenotools للحقن
+        // Enable libadrenotools for driver injection
         env["ADRENOTOOLS_DRIVER_FILE_REDIRECT"] = "1"
+        env["ADRENOTOOLS_DRIVER_CUSTOM"] = driver.filePath.absolutePath
         
-        Logger.info(TAG, "Applied Turnip driver: ${driver.name} v${driver.version}")
+        // Turnip-specific optimizations based on GPU generation
+        when (gpuInfo.generation) {
+            SnapdragonDetector.AdrenoGeneration.ADRENO_8XX -> {
+                // Snapdragon 8 Elite (Adreno 8xx) optimizations
+                env["TU_DEBUG"] = "noconform,syncdraw,nir"
+                env["MESA_VK_WSI_PRESENT_MODE"] = "immediate"
+                env["TU_OVERRIDE_HEAP_SIZE"] = "8192"
+                env["TU_FORCE_UNIFORM_DESCRIPTOR_SIZE"] = "1"
+            }
+            SnapdragonDetector.AdrenoGeneration.ADRENO_7XX -> {
+                // Snapdragon 8 Gen 1/2/3 (Adreno 7xx) optimizations
+                env["TU_DEBUG"] = "noconform,syncdraw"
+                env["MESA_VK_WSI_PRESENT_MODE"] = "mailbox"
+                env["TU_OVERRIDE_HEAP_SIZE"] = "4096"
+            }
+            else -> {
+                // Default settings for Adreno 6xx
+                env["TU_DEBUG"] = "noconform"
+                env["MESA_VK_WSI_PRESENT_MODE"] = "fifo"
+            }
+        }
+        
+        // Shader cache settings
+        env["MESA_SHADER_CACHE_DIR"] = "${context.cacheDir.absolutePath}/mesa_shader_cache"
+        env["MESA_SHADER_CACHE_MAX_SIZE"] = "1024M"
+        env["MESA_DISK_CACHE_SINGLE_FILE"] = "true"
+        
+        // Memory optimizations
+        env["MESA_GLSL_CACHE_DISABLE"] = "false"
+        env["MESA_EXTENSION_OVERRIDE"] = "GL_EXT_texture_filter_anisotropic"
+        
+        Logger.info(TAG, "Applied Turnip driver: ${driver.name} v${driver.version} for ${gpuInfo.generation}")
+        Logger.info(TAG, "Turnip environment variables: ${env.size} entries")
         
         return env
     }
