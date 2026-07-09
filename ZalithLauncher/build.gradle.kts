@@ -2,6 +2,7 @@ import com.android.build.api.variant.FilterConfiguration.FilterType.ABI
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.tasks.MergeSourceSetFolders
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Base64
 
 plugins {
     alias(libs.plugins.android.application)
@@ -51,7 +52,7 @@ android {
                 // استخدام keystore من GitHub Secrets
                 val keystoreFile = File.createTempFile("keystore", ".jks")
                 keystoreFile.deleteOnExit()
-                val decoder = java.util.Base64.getDecoder()
+                val decoder = Base64.getDecoder()
                 keystoreFile.writeBytes(decoder.decode(keystoreBase64))
                 storeFile = keystoreFile
                 keyAlias = System.getenv("KEY_ALIAS") ?: "movtery_zalith"
