@@ -29,27 +29,27 @@ val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? Str
 
 val projectArch: String = System.getProperty("arch", "all")
 
-fun getKeyFromLocal(envKey: String, fileName: String? = null, default: String? = null): String {
+fun getKeyFromLocal(envKey: String, fileName: String? = null, default: String? = null): String? {
     val key = System.getenv(envKey)
     return key ?: fileName?.let {
         val file = File(rootDir, fileName)
-        if (file.canRead() && file.isFile) file.readText() else null
-    } ?: default ?: run {
-        logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
-        ""
-    }
+        if (file.canRead() && file.isFile) file.readText().trim() else null
+    } ?: default
 }
 
 android {
     namespace = zalithPackageName
     compileSdk = 37
 
+    val sPassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt")
+    val kPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
+
     signingConfigs {
         create("releaseBuild") {
             storeFile = file("zalith_launcher.jks")
-            storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt")
+            storePassword = sPassword ?: ""
             keyAlias = "movtery_zalith"
-            keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
+            keyPassword = kPassword ?: ""
         }
         create("debugBuild") {
             storeFile = file("zalith_launcher_debug.jks")
@@ -73,7 +73,12 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("releaseBuild")
+            if (sPassword != null && kPassword != null) {
+                signingConfig = signingConfigs.getByName("releaseBuild")
+            } else {
+                signingConfig = signingConfigs.getByName("debugBuild")
+                logger.warn("BUILD: Release signing keys not found, using debug signing instead.")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -176,12 +181,12 @@ kotlin {
 }
 
 buildKeys {
-    string("OAUTH_CLIENT_ID", getKeyFromLocal("OAUTH_CLIENT_ID", ".oauth_client_id.txt", defaultOAuthClientID), true)
+    string("OAUTH_CLIENT_ID", getKeyFromLocal("OAUTH_CLIENT_ID", ".oauth_client_id.txt", defaultOAuthClientID) ?: "", true)
     string("LAUNCHER_NAME", launcherAPPName, true)
     string("LAUNCHER_IDENTIFIER", launcherName, true)
     string("LAUNCHER_SHORT_NAME", launcherShortName, true)
     string("URL_HOME", launcherUrl, true)
-    string("CURSEFORGE_API", getKeyFromLocal("CURSEFORGE_API_KEY", ".curseforge_api.txt", defaultCurseForgeApiKey), true)
+    string("CURSEFORGE_API", getKeyFromLocal("CURSEFORGE_API_KEY", ".curseforge_api.txt", defaultCurseForgeApiKey) ?: "", true)
     string("BUILD_ARCH", projectArch)
 }
 
