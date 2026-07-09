@@ -6,6 +6,9 @@ on:
       - '**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   Build:
     uses: ./.github/workflows/build.yml
@@ -14,3 +17,34 @@ jobs:
     secrets:
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+
+  Upload-to-Latest-Release:
+    needs: Build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Organize APKs
+        run: |
+          mkdir -p ./apks
+          find ./artifacts -name "*.apk" -type f -exec cp {} ./apks/ \;
+          echo "Found APKs:"
+          ls -R ./apks/
+
+      - name: Update Latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Latest Continuous Build"
+          body: |
+            This release is automatically updated on every push to the main branch.
+            Last updated: ${{ github.event.head_commit.timestamp }}
+            Commit: ${{ github.sha }}
+          files: ./apks/*.apk
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
