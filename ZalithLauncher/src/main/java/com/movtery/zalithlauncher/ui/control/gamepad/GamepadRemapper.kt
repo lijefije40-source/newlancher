@@ -224,6 +224,7 @@ data class GamepadRemapper(
         return keyMapping[translatedSource] ?: translatedSource
     }
 
+    @Suppress("DEPRECATION")
     private fun getRemappedValue(mappedSource: Int, keyEvent: KeyEvent): Float? {
         //DPAD 和触发器特殊处理，永远映射为null
         val isDpad = (mappedSource == MotionEvent.AXIS_HAT_Y && keyEvent.keyCode == KeyEvent.KEYCODE_DPAD_UP) ||

@@ -299,7 +299,7 @@ fun TooltipIconButton(
 
     TooltipBox(
         modifier = modifier,
-        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(),
         tooltip = tooltip,
         state = tooltipState,
         enableUserInput = false
