@@ -51,11 +51,13 @@ import com.movtery.zalithlauncher.utils.network.toLocal
 import com.movtery.zalithlauncher.viewmodel.ErrorViewModel
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.net.ConnectException
 import java.net.UnknownHostException
 import java.nio.channels.UnresolvedAddressException
 import java.util.zip.ZipFile
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "LaunchGame"
 
@@ -142,7 +144,7 @@ object LaunchGame {
                 Logger.info(TAG, "All pre-launch checks completed, launching game...")
                 
                 // Use non-blocking delay and ensure we switch to Main thread for Activity launch
-                delay(500)
+                delay(500.milliseconds)
                 withContext(Dispatchers.Main) {
                     runGame(context, version, account)
                     exitActivity()
