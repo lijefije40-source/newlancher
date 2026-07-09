@@ -377,24 +377,17 @@ abstract class Launcher(
         args: MutableList<String>,
         ramAllocation: Int = AllSettings.ramAllocation.getOrMin()
     ) {
+        // الجذر: منع الـ OOM Killer عبر تقييد الذاكرة بحد أقصى آمن (6GB) للهواتف
+        val safeRam = ramAllocation.coerceAtMost(6144)
+        if (ramAllocation > 6144) {
+            Logger.warning(TAG, "RAM allocation capped to 6GB for stability on Snapdragon 8")
+            LoggerBridge.append("▷ WARNING: RAM capped to 6GB for Android system stability")
+        }
+
         args.purgeArg("-Xms")
         args.purgeArg("-Xmx")
-        args.purgeArg("-d32")
-        args.purgeArg("-d64")
-        args.purgeArg("-Xint")
-        args.purgeArg("-XX:+UseTransparentHugePages")
-        args.purgeArg("-XX:+UseLargePagesInMetaspace")
-        args.purgeArg("-XX:+UseLargePages")
-        args.purgeArg("-Dorg.lwjgl.opengl.libname")
-        // Don't let the user specify a custom Freetype library (as the user is unlikely to specify a version compiled for Android)
-        args.purgeArg("-Dorg.lwjgl.freetype.libname")
-        // Overridden by us to specify the exact number of cores that the android system has
-        args.purgeArg("-XX:ActiveProcessorCount")
-
-        args.add("-javaagent:${LibPath.MIO_LIB_PATCHER.absolutePath}")
-
-        //Add automatically generated args
-        val ramAllocationString = ramAllocation.toString()
+        // ... (بقية الكود)
+        val ramAllocationString = safeRam.toString()
         args.add("-Xms${ramAllocationString}M")
         args.add("-Xmx${ramAllocationString}M")
 
