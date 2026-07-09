@@ -540,16 +540,14 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         lifecycleScope.launch {
             if (vmViewModel.isRunning) {
                 delay(50L.milliseconds)
-                withContext(Dispatchers.Main) {
-                    refreshWindowSize(screenSize = vmViewModel.screenSize)
-                }
+                refreshWindowSize(screenSize = vmViewModel.screenSize)
             }
         }
     }
 
-    private fun refreshWindowSize(
+    private suspend fun refreshWindowSize(
         screenSize: IntSize
-    ): IntSize {
+    ): IntSize = withContext(Dispatchers.Main) {
         fun getDisplayPixels(pixels: Int): Int {
             return withHandler {
                 when (type) {
@@ -565,7 +563,7 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
         ZLBridgeStates.onWindowChange()
         CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight)
 
-        return IntSize(windowWidth, windowHeight)
+        return@withContext IntSize(windowWidth, windowHeight)
     }
 
     override fun onDestroy() {
@@ -715,8 +713,10 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener, SurfaceHolde
                 vmViewModel.screenSize = screenSize
                 vmViewModel.screenSizeBridge.provideData(screenSize)
                 if (changed) {
-                    refreshWindowSize(screenSize = screenSize)
-                    vmViewModel.onConfigurationChanged(false)
+                    launch {
+                        refreshWindowSize(screenSize = screenSize)
+                        vmViewModel.onConfigurationChanged(false)
+                    }
                 }
             }
 

@@ -58,6 +58,10 @@ import com.movtery.zalithlauncher.utils.file.ensureDirectorySilently
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.string.isBiggerTo
 import com.movtery.zalithlauncher.utils.string.isEqualTo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import org.lwjgl.glfw.CallbackBridge
 import java.io.File
@@ -394,46 +398,58 @@ class GameLauncher(
         clientJar: File,
         javaRuntime: String,
         customArgs: String
-    ): Int {
-        return try {
+    ): Int = withContext(Dispatchers.IO) {
+        return@withContext try {
             val runtime = RuntimesManager.forceReload(javaRuntime)
 
             val gameDirPath = version.getGameDir()
 
-            // Async operations for faster loading
-            disableSplash(gameDirPath)
-            
-            // Pre-create necessary directories
-            ensureGameDirectories(gameDirPath)
+            coroutineScope {
+                // Run pre-launch tasks in parallel
+                val splashJob = launch { disableSplash(gameDirPath) }
+                val dirsJob = launch { ensureGameDirectories(gameDirPath) }
 
-            //初始化运行环境
-            this.runtime = runtime
-            val runtimeLibraryPath = getRuntimeLibraryPath()
-
-            val launchArgs = LaunchArgs(
-                runtimeLibraryPath = runtimeLibraryPath,
-                account = usingAccount,
-                offlineServer = offlineServer,
-                gameDirPath = gameDirPath,
-                version = version,
-                clientJar = clientJar,
-                gameManifest = gameManifest,
-                runtime = runtime,
-                readAssetsFile = { path -> activity.readAssetFile(path) },
-                getCacioJavaArgs = { isJava8 ->
-                    getCacioJavaArgs(screenSize, isJava8)
+                // Access offlineServer early to start it in background if needed
+                val serverJob = launch {
+                    Logger.info(TAG, "Ensuring offline server is ready...")
+                    val s = offlineServer
+                    Logger.info(TAG, "Offline server is ready.")
                 }
-            ).getAllArgs()
 
-            tryStartTouchProxy()
+                // Wait for non-critical pre-launch tasks
+                splashJob.join()
+                dirsJob.join()
 
-            launchJvm(
-                context = activity,
-                jvmArgs = launchArgs,
-                userHome = GamePathManager.getCurrentPath(),
-                userArgs = customArgs,
-                screenSize = screenSize
-            )
+                //初始化运行环境
+                this@GameLauncher.runtime = runtime
+                val runtimeLibraryPath = getRuntimeLibraryPath()
+
+                val launchArgs = LaunchArgs(
+                    runtimeLibraryPath = runtimeLibraryPath,
+                    account = usingAccount,
+                    offlineServer = offlineServer,
+                    gameDirPath = gameDirPath,
+                    version = version,
+                    clientJar = clientJar,
+                    gameManifest = gameManifest,
+                    runtime = runtime,
+                    readAssetsFile = { path -> activity.readAssetFile(path) },
+                    getCacioJavaArgs = { isJava8 ->
+                        getCacioJavaArgs(screenSize, isJava8)
+                    }
+                ).getAllArgs()
+
+                serverJob.join() // Now critical
+                tryStartTouchProxy()
+
+                launchJvm(
+                    context = activity,
+                    jvmArgs = launchArgs,
+                    userHome = GamePathManager.getCurrentPath(),
+                    userArgs = customArgs,
+                    screenSize = screenSize
+                )
+            }
         } catch (e: Exception) {
             Logger.error(TAG, "Fatal error during launch game preparation", e)
             LoggerBridge.append("FATAL ERROR during game preparation: ${e.message}")

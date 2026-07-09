@@ -45,6 +45,8 @@ import com.movtery.zalithlauncher.utils.device.Architecture.is64BitsDevice
 import com.movtery.zalithlauncher.utils.logging.Logger
 import com.movtery.zalithlauncher.utils.string.splitPreservingQuotes
 import com.oracle.dalvik.VMLauncher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -79,45 +81,40 @@ abstract class Launcher(
         screenSize: IntSize,
         useLocalLanguage: Boolean = true
     ): Int {
-        return try {
-            LoggerBridge.append("▷ Initializing JVM launcher...")
-            Logger.info(TAG, "Starting JVM initialization")
-            ZLNativeInvoker.staticLauncher = this
+        return withContext(Dispatchers.IO) {
+            try {
+                LoggerBridge.append("▷ Initializing JVM launcher...")
+                Logger.info(TAG, "Starting JVM initialization")
+                ZLNativeInvoker.staticLauncher = this@Launcher
 
-            LoggerBridge.append("▷ Setting library path...")
-            Logger.info(TAG, "Setting up library paths")
-            val libPath = getRuntimeLibraryPath()
-            LoggerBridge.append("▷ Library path configured")
-            ZLBridge.setLdLibraryPath(libPath)
+                LoggerBridge.append("▷ Setting library path...")
+                val libPath = getRuntimeLibraryPath()
+                ZLBridge.setLdLibraryPath(libPath)
 
-            LoggerBridge.appendTitle("Env Map")
-            LoggerBridge.append("▷ Setting environment variables...")
-            Logger.info(TAG, "Setting up environment")
-            setEnv(screenSize)
+                LoggerBridge.appendTitle("Env Map")
+                LoggerBridge.append("▷ Setting environment variables...")
+                setEnv(screenSize)
 
-            LoggerBridge.appendTitle("DLOPEN Java Runtime")
-            Logger.info(TAG, "Loading Java runtime libraries")
-            dlopenJavaRuntime()
+                LoggerBridge.appendTitle("DLOPEN Java Runtime")
+                dlopenJavaRuntime()
 
-            LoggerBridge.appendTitle("DLOPEN Engine")
-            Logger.info(TAG, "Loading engine libraries")
-            dlopenEngine()
+                LoggerBridge.appendTitle("DLOPEN Engine")
+                dlopenEngine()
 
-            LoggerBridge.append("▷ Proceeding to JVM launch...")
-            Logger.info(TAG, "All preparations complete, launching JVM")
-            launchJavaVM(
-                context = context,
-                jvmArgs = jvmArgs,
-                userHome = userHome,
-                userArgs = userArgs,
-                screenSize = screenSize,
-                useLocalLanguage = useLocalLanguage
-            )
-        } catch (e: Throwable) {
-            LoggerBridge.append("FATAL ERROR in launchJvm: ${e.message}")
-            LoggerBridge.append("Error type: ${e::class.qualifiedName}")
-            Logger.error(TAG, "Fatal error during JVM launch preparation", e)
-            -994
+                LoggerBridge.append("▷ Proceeding to JVM launch...")
+                launchJavaVM(
+                    context = context,
+                    jvmArgs = jvmArgs,
+                    userHome = userHome,
+                    userArgs = userArgs,
+                    screenSize = screenSize,
+                    useLocalLanguage = useLocalLanguage
+                )
+            } catch (e: Throwable) {
+                LoggerBridge.append("FATAL ERROR in launchJvm: ${e.message}")
+                Logger.error(TAG, "Fatal error during JVM launch preparation", e)
+                -994
+            }
         }
     }
 

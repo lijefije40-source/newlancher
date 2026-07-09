@@ -141,15 +141,12 @@ object LaunchGame {
 
                 Logger.info(TAG, "All pre-launch checks completed, launching game...")
                 
-                // إضافة تأخير صغير للتأكد من اكتمال كل العمليات
-                try {
-                    Thread.sleep(500)
-                } catch (e: InterruptedException) {
-                    Logger.warning(TAG, "Pre-launch delay interrupted", e)
+                // Use non-blocking delay and ensure we switch to Main thread for Activity launch
+                delay(500)
+                withContext(Dispatchers.Main) {
+                    runGame(context, version, account)
+                    exitActivity()
                 }
-                
-                runGame(context, version, account)
-                exitActivity()
             },
             onError = { message ->
                 submitError(
