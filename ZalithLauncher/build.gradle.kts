@@ -31,10 +31,10 @@ val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? Str
 val projectArch: String = System.getProperty("arch", "all")
 
 fun getKeyFromLocal(envKey: String, fileName: String? = null, default: String? = null): String {
-    val key = System.getenv(envKey)
+    val key = System.getenv(envKey)?.trim()
     return key ?: fileName?.let {
         val file = File(rootDir, fileName)
-        if (file.canRead() && file.isFile) file.readText() else null
+        if (file.canRead() && file.isFile) file.readText().trim() else null
     } ?: default ?: run {
         logger.warn("BUILD: $envKey not set; related features may throw exceptions.")
         ""
@@ -48,9 +48,9 @@ android {
     signingConfigs {
         create("releaseBuild") {
             storeFile = file("zalith_launcher.jks")
-            storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt")
+            storePassword = getKeyFromLocal("STORE_PASSWORD", ".store_password.txt", defaultStorePassword)
             keyAlias = "movtery_zalith"
-            keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
+            keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt", defaultKeyPassword)
         }
         create("debugBuild") {
             storeFile = file("zalith_launcher_debug.jks")
